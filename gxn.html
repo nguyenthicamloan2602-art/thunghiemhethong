@@ -71,7 +71,7 @@
         <p class="text-xs text-sky-100 uppercase font-medium">ĐOÀN THANH NIÊN - HỘI SINH VIÊN ĐẠI HỌC Y DƯỢC TP. HỒ CHÍ MINH</p>
       </div>
       <div id="userInfoHeader" class="flex items-center space-x-3">
-        <span id="userFullName" class="font-semibold text-white bg-sky-700/60 px-3.5 py-1.5 rounded-xl border border-sky-400 text-xs shadow-sm">🔑 Lê Thanh Hải</span>
+        <span id="userFullName" class="font-semibold text-white bg-sky-700/60 px-3.5 py-1.5 rounded-xl border border-sky-400 text-xs shadow-sm">🔑 Quản trị viên</span>
         <button onclick="goBackToPortal()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs transition shadow-sm">&larr; Quay lại Trang chủ</button>
       </div>
     </header>
@@ -228,62 +228,50 @@
                   <div class="flex items-center gap-2 shrink-0">
                     <div class="relative">
                       <button onclick="toggleStampDropdown()" type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95">
-                        <span>🔴</span> Thêm mẫu chữ ký / con dấu
+                        <span>✍️</span> Thêm chữ ký / con dấu của tôi
                       </button>
 
-                      <!-- POPUP DROPDOWN QUẢN LÝ CHỮ KÝ ĐÃ LƯU -->
+                      <!-- POPUP DROPDOWN QUẢN LÝ CHỮ KÝ CÁ NHÂN -->
                       <div id="stampDropdownMenu" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 z-50 text-xs space-y-3.5">
                         
                         <!-- Header -->
                         <div class="flex items-center justify-between pb-2 border-b border-slate-100">
                           <span class="font-extrabold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5">
-                            <span>🔏</span> Chữ ký & Con dấu của bạn
+                            <span>🔏</span> Kho chữ ký & Con dấu của bạn
                           </span>
                           <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
-                            Đã lưu trữ
+                            Được lưu tự động
                           </span>
                         </div>
 
                         <!-- Danh sách chữ ký cá nhân đã lưu trong hệ thống (localStorage) -->
                         <div class="space-y-1.5">
-                          <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Chữ ký / Con dấu đã lưu:</div>
-                          <div id="savedSignaturesContainer" class="max-h-40 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
+                          <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Mẫu đã lưu sẵn:</div>
+                          <div id="savedSignaturesContainer" class="max-h-44 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
                             <!-- Tự động sinh ra từ localStorage -->
                           </div>
                         </div>
 
-                        <!-- Nút Tải lên và Lưu vào hệ thống -->
-                        <div class="pt-2 border-t border-slate-100 space-y-2">
-                          <div class="text-[11px] font-bold text-slate-700 uppercase tracking-wide">➕ Tải lên & Lưu mẫu mới:</div>
-                          <div class="flex items-center gap-2">
-                            <input type="text" id="customSigNameInput" placeholder="Tên mẫu (VD: Chữ ký cá nhân, Dấu đỏ...)" 
-                                   class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-700 outline-none focus:ring-2 focus:ring-indigo-400 font-medium transition" />
-                            <label class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-xl cursor-pointer transition text-xs shrink-0 flex items-center gap-1 shadow-sm active:scale-95">
-                              <span>📂</span> Chọn ảnh
+                        <!-- Khu vực Tải lên ảnh mới và lưu lại -->
+                        <div class="pt-2.5 border-t border-slate-100 space-y-2">
+                          <div class="text-[11px] font-bold text-slate-700 uppercase tracking-wide">➕ Tải lên mẫu chữ ký / con dấu mới:</div>
+                          <div class="space-y-2">
+                            <input type="text" id="customSigNameInput" placeholder="Nhập tên gọi (VD: Chữ ký số, Dấu mộc...)" 
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-700 outline-none focus:ring-2 focus:ring-indigo-400 font-medium transition" />
+                            
+                            <label class="w-full bg-indigo-50 hover:bg-indigo-100 border-2 border-dashed border-indigo-200 text-indigo-700 font-bold py-2.5 px-3 rounded-xl cursor-pointer transition text-xs flex items-center justify-center gap-2">
+                              <span>📂</span> Chọn ảnh chữ ký từ máy tính
                               <input type="file" id="sigFileInput" accept="image/*" onchange="handleSaveNewSignature(event)" class="hidden" />
                             </label>
                           </div>
-                          <p class="text-[10px] text-slate-400 italic">Mẹo: Nên tải file PNG nền trong suốt để khi đóng dấu không che chữ.</p>
-                        </div>
-
-                        <!-- Mẫu chuẩn Đoàn - Hội có sẵn của hệ thống -->
-                        <div class="pt-2 border-t border-slate-100 space-y-1.5">
-                          <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Mẫu Đoàn - Hội mặc định:</div>
-                          <div class="grid grid-cols-2 gap-1.5">
-                            <button onclick="addPresetStamp('doan')" type="button" class="text-left p-2 hover:bg-indigo-50/60 rounded-xl border border-slate-100 flex items-center gap-1.5 text-slate-700 font-medium transition">
-                              <span class="text-rose-600 font-bold">🔴</span> Dấu BCH Đoàn
-                            </button>
-                            <button onclick="addPresetStamp('hoi')" type="button" class="text-left p-2 hover:bg-indigo-50/60 rounded-xl border border-slate-100 flex items-center gap-1.5 text-slate-700 font-medium transition">
-                              <span class="text-rose-600 font-bold">🔴</span> Dấu Hội Sinh Viên
-                            </button>
-                          </div>
+                          <p class="text-[10px] text-slate-400 italic">Khuyên dùng ảnh định dạng PNG nền trong suốt để khi đóng dấu không đè lấp văn bản.</p>
                         </div>
 
                       </div>
                     </div>
 
-                    <button onclick="clearAllStamps()" type="button" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 border border-rose-200 transition" title="Xóa toàn bộ con dấu đã chèn">
-                      <span>🗑️</span> Xóa dấu
+                    <button onclick="clearAllStamps()" type="button" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 border border-rose-200 transition" title="Xóa toàn bộ con dấu đã chèn trên văn bản hiện tại">
+                      <span>🗑️</span> Xóa dấu đã đặt
                     </button>
                   </div>
                 </div>
@@ -320,7 +308,7 @@
                       </a>
                     </div>
                     <div class="text-slate-400 italic">
-                      💡 Nhấp vào con dấu để kéo thả vị trí hoặc kéo 4 góc để phóng to/thu nhỏ
+                      💡 Nhấp vào con dấu để kéo thả vị trí hoặc kéo 4 góc để co giãn
                     </div>
                   </div>
                 </div>
@@ -402,7 +390,9 @@
     var placedStamps = [];
     var selectedStampIndex = null;
 
+    // ==============================================================
     // QUẢN LÝ LƯU TRỮ CHỮ KÝ VÀ DẤU CỦA NGƯỜI DÙNG (LOCALSTORAGE)
+    // ==============================================================
     const STORAGE_KEY_SIGNATURES = "gxn_saved_user_signatures";
 
     function getSavedSignatures() {
@@ -455,7 +445,7 @@
                 Chèn
               </button>
               <button type="button" onclick="deleteSavedSignature('${item.id}', event)" 
-                      class="text-rose-400 hover:text-rose-600 p-1 rounded-lg text-xs transition" title="Xóa mẫu này">
+                      class="text-rose-400 hover:text-rose-600 p-1 rounded-lg text-xs transition" title="Xóa mẫu này khỏi danh sách">
                 🗑️
               </button>
             </div>
@@ -484,7 +474,7 @@
         };
 
         const list = getSavedSignatures();
-        list.unshift(newSigItem);
+        list.unshift(newSigItem); // Đưa lên đầu danh sách
         saveSignaturesToStorage(list);
 
         if (nameInput) nameInput.value = "";
@@ -536,37 +526,6 @@
       selectedStampIndex = placedStamps.length - 1;
       renderStamps();
     }
-
-    const PRESET_SVGS = {
-      'doan': `<svg viewBox="0 0 100 100" class="w-full h-full text-red-600 fill-current opacity-90 drop-shadow-sm pointer-events-none">
-        <circle cx="50" cy="50" r="46" fill="none" stroke="#dc2626" stroke-width="2.5" />
-        <circle cx="50" cy="50" r="33" fill="none" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3,1" />
-        <path id="dynTop" d="M 12 50 A 38 38 0 0 1 88 50" fill="none" />
-        <path id="dynBot" d="M 88 50 A 38 38 0 0 1 12 50" fill="none" />
-        <text font-size="5.8" font-weight="900" fill="#dc2626" letter-spacing="0.5">
-          <textPath href="#dynTop" startOffset="50%" text-anchor="middle">BCH ĐOÀN TNCS HỒ CHÍ MINH</textPath>
-        </text>
-        <text font-size="5.2" font-weight="800" fill="#dc2626" letter-spacing="0.5">
-          <textPath href="#dynBot" startOffset="50%" text-anchor="middle">ĐẠI HỌC Y DƯỢC TP.HCM</textPath>
-        </text>
-        <polygon points="50,37 53,44 60,45 55,50 56,57 50,53 44,57 45,50 40,45 47,44" fill="#dc2626" />
-        <text x="50" y="65" font-size="4.2" font-weight="bold" fill="#dc2626" text-anchor="middle">BAN CHẤP HÀNH</text>
-      </svg>`,
-      'hoi': `<svg viewBox="0 0 100 100" class="w-full h-full text-red-600 fill-current opacity-90 drop-shadow-sm pointer-events-none">
-        <circle cx="50" cy="50" r="46" fill="none" stroke="#dc2626" stroke-width="2.5" />
-        <circle cx="50" cy="50" r="33" fill="none" stroke="#dc2626" stroke-width="1.2" />
-        <path id="dynHoiTop" d="M 12 50 A 38 38 0 0 1 88 50" fill="none" />
-        <path id="dynHoiBot" d="M 88 50 A 38 38 0 0 1 12 50" fill="none" />
-        <text font-size="5.6" font-weight="900" fill="#dc2626" letter-spacing="0.4">
-          <textPath href="#dynHoiTop" startOffset="50%" text-anchor="middle">HỘI SINH VIÊN VIỆT NAM</textPath>
-        </text>
-        <text font-size="5.2" font-weight="800" fill="#dc2626">
-          <textPath href="#dynHoiBot" startOffset="50%" text-anchor="middle">ĐẠI HỌC Y DƯỢC TP.HCM</textPath>
-        </text>
-        <circle cx="50" cy="46" r="6" fill="#dc2626" />
-        <text x="50" y="64" font-size="4.2" font-weight="bold" fill="#dc2626" text-anchor="middle">BAN THƯỜNG VỤ</text>
-      </svg>`
-    };
 
     window.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -952,24 +911,6 @@
         menu.classList.add('hidden');
       }
     });
-
-    function addPresetStamp(type) {
-      toggleStampDropdown();
-      const newStamp = {
-        id: "stamp_" + Date.now(),
-        type: "stamp",
-        content: PRESET_SVGS[type] || PRESET_SVGS['doan'],
-        x: 320,
-        y: 280,
-        width: 140,
-        height: 140,
-        rotation: -4,
-        opacity: 0.92
-      };
-      placedStamps.push(newStamp);
-      selectedStampIndex = placedStamps.length - 1;
-      renderStamps();
-    }
 
     function clearAllStamps() {
       placedStamps = [];
@@ -1457,6 +1398,7 @@
     function goBackToPortal() {
       window.location.href = "/";
     }
+
   </script>
 </body>
 </html>
