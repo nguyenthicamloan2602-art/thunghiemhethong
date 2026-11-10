@@ -7,7 +7,280 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com">
+    // ==============================================================
+    // LOGIC CON DẤU & CHỮ KÝ ĐIỆN TỬ KÉO THẢ TRỰC TIẾP TRÊN SLIDE
+    // ==============================================================
+    var placedStamps = [];
+    var selectedStampIndex = null;
+
+    const PRESET_SVGS = {
+      'doan': `<svg viewBox="0 0 100 100" class="w-full h-full text-red-600 fill-current opacity-90 drop-shadow-sm pointer-events-none">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#dc2626" stroke-width="2.5" />
+        <circle cx="50" cy="50" r="33" fill="none" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3,1" />
+        <path id="dynTop" d="M 12 50 A 38 38 0 0 1 88 50" fill="none" />
+        <path id="dynBot" d="M 88 50 A 38 38 0 0 1 12 50" fill="none" />
+        <text font-size="5.8" font-weight="900" fill="#dc2626" letter-spacing="0.5">
+          <textPath href="#dynTop" startOffset="50%" text-anchor="middle">BCH ĐOÀN TNCS HỒ CHÍ MINH</textPath>
+        </text>
+        <text font-size="5.2" font-weight="800" fill="#dc2626" letter-spacing="0.5">
+          <textPath href="#dynBot" startOffset="50%" text-anchor="middle">ĐẠI HỌC Y DƯỢC TP.HCM</textPath>
+        </text>
+        <polygon points="50,37 53,44 60,45 55,50 56,57 50,53 44,57 45,50 40,45 47,44" fill="#dc2626" />
+        <text x="50" y="65" font-size="4.2" font-weight="bold" fill="#dc2626" text-anchor="middle">BAN CHẤP HÀNH</text>
+      </svg>`,
+      'hoi': `<svg viewBox="0 0 100 100" class="w-full h-full text-red-600 fill-current opacity-90 drop-shadow-sm pointer-events-none">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#dc2626" stroke-width="2.5" />
+        <circle cx="50" cy="50" r="33" fill="none" stroke="#dc2626" stroke-width="1.2" />
+        <path id="dynHoiTop" d="M 12 50 A 38 38 0 0 1 88 50" fill="none" />
+        <path id="dynHoiBot" d="M 88 50 A 38 38 0 0 1 12 50" fill="none" />
+        <text font-size="5.6" font-weight="900" fill="#dc2626" letter-spacing="0.4">
+          <textPath href="#dynHoiTop" startOffset="50%" text-anchor="middle">HỘI SINH VIÊN VIỆT NAM</textPath>
+        </text>
+        <text font-size="5.2" font-weight="800" fill="#dc2626">
+          <textPath href="#dynHoiBot" startOffset="50%" text-anchor="middle">ĐẠI HỌC Y DƯỢC TP.HCM</textPath>
+        </text>
+        <circle cx="50" cy="46" r="6" fill="#dc2626" />
+        <text x="50" y="64" font-size="4.2" font-weight="bold" fill="#dc2626" text-anchor="middle">BAN THƯỜNG VỤ</text>
+      </svg>`
+    };
+
+    function toggleStampDropdown() {
+      const menu = document.getElementById('stampDropdownMenu');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    // Đóng dropdown khi click ra ngoài
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('stampDropdownMenu');
+      if (menu && !menu.contains(e.target) && !e.target.closest('button[onclick*="toggleStampDropdown"]')) {
+        menu.classList.add('hidden');
+      }
+    });
+
+    function addPresetStamp(type) {
+      toggleStampDropdown();
+      const newStamp = {
+        id: "stamp_" + Date.now(),
+        type: "stamp",
+        content: PRESET_SVGS[type] || PRESET_SVGS['doan'],
+        x: 320,
+        y: 280,
+        width: 140,
+        height: 140,
+        rotation: -4,
+        opacity: 0.92
+      };
+      placedStamps.push(newStamp);
+      selectedStampIndex = placedStamps.length - 1;
+      renderStamps();
+    }
+
+    function addPresetSignature(name) {
+      toggleStampDropdown();
+      const newSig = {
+        id: "sig_" + Date.now(),
+        type: "signature",
+        content: `<div class="w-full h-full flex items-center justify-center pointer-events-none select-none text-2xl md:text-3xl font-serif italic text-blue-900 font-bold drop-shadow-xs rotate-[-5deg]">
+          ${name.split(' ').slice(-2).join(' ')}
+        </div>`,
+        x: 340,
+        y: 340,
+        width: 160,
+        height: 80,
+        rotation: -4,
+        opacity: 0.95
+      };
+      placedStamps.push(newSig);
+      selectedStampIndex = placedStamps.length - 1;
+      renderStamps();
+    }
+
+    function handleStampFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        toggleStampDropdown();
+        const customObj = {
+          id: "custom_" + Date.now(),
+          type: "custom",
+          content: `<img src="${e.target.result}" class="w-full h-full object-contain pointer-events-none drop-shadow-sm" alt="Stamp" />`,
+          x: 320,
+          y: 280,
+          width: 140,
+          height: 140,
+          rotation: 0,
+          opacity: 0.95
+        };
+        placedStamps.push(customObj);
+        selectedStampIndex = placedStamps.length - 1;
+        renderStamps();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearAllStamps() {
+      placedStamps = [];
+      selectedStampIndex = null;
+      renderStamps();
+    }
+
+    function removeStampAt(idx, e) {
+      if (e) e.stopPropagation();
+      placedStamps.splice(idx, 1);
+      selectedStampIndex = null;
+      renderStamps();
+    }
+
+    function rotateStampAt(idx, deg, e) {
+      if (e) e.stopPropagation();
+      placedStamps[idx].rotation = (placedStamps[idx].rotation + deg) % 360;
+      renderStamps();
+    }
+
+    function renderStamps() {
+      const layer = document.getElementById('stampsOverlayLayer');
+      const badge = document.getElementById('stampsCountBadge');
+      if (badge) badge.textContent = `Đã chèn: ${placedStamps.length} dấu/chữ ký`;
+      if (!layer) return;
+
+      if (placedStamps.length === 0) {
+        layer.innerHTML = "";
+        return;
+      }
+
+      let html = "";
+      placedStamps.forEach((stamp, idx) => {
+        const isSelected = idx === selectedStampIndex;
+        html += `
+          <div id="${stamp.id}" 
+               class="stamp-box pointer-events-auto absolute ${isSelected ? 'selected' : ''}" 
+               style="left: ${stamp.x}px; top: ${stamp.y}px; width: ${stamp.width}px; height: ${stamp.height}px; transform: rotate(${stamp.rotation}deg); opacity: ${stamp.opacity};"
+               onmousedown="startStampDrag(event, ${idx})"
+               onclick="selectSingleStamp(event, ${idx})">
+            
+            ${stamp.content}
+
+            ${isSelected ? `
+              <!-- Nút điều khiển 4 góc -->
+              <div class="stamp-handle handle-nw" onmousedown="startStampResize(event, ${idx}, 'nw')"></div>
+              <div class="stamp-handle handle-ne" onmousedown="startStampResize(event, ${idx}, 'ne')"></div>
+              <div class="stamp-handle handle-sw" onmousedown="startStampResize(event, ${idx}, 'sw')"></div>
+              <div class="stamp-handle handle-se" onmousedown="startStampResize(event, ${idx}, 'se')"></div>
+
+              <!-- Thanh menu nhanh trên con dấu -->
+              <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white rounded-lg px-2 py-0.5 flex items-center gap-1.5 shadow-xl text-[10px] whitespace-nowrap z-40">
+                <button type="button" onclick="rotateStampAt(${idx}, -5, event)" title="Xoay trái" class="hover:text-indigo-300">↺</button>
+                <button type="button" onclick="rotateStampAt(${idx}, 5, event)" title="Xoay phải" class="hover:text-indigo-300">↻</button>
+                <span class="text-slate-500">|</span>
+                <button type="button" onclick="removeStampAt(${idx}, event)" title="Xoá dấu" class="text-rose-400 hover:text-rose-300 font-bold">✕</button>
+              </div>
+            ` : ''}
+
+          </div>
+        `;
+      });
+
+      layer.innerHTML = html;
+    }
+
+    function selectSingleStamp(e, idx) {
+      e.stopPropagation();
+      selectedStampIndex = idx;
+      renderStamps();
+    }
+
+    // Kéo thả vị trí con dấu
+    function startStampDrag(e, idx) {
+      if (e.target.classList.contains('stamp-handle') || e.target.closest('button')) return;
+      e.preventDefault();
+      selectedStampIndex = idx;
+      renderStamps();
+
+      const stamp = placedStamps[idx];
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const initialLeft = stamp.x;
+      const initialTop = stamp.y;
+      const canvasEl = document.getElementById('documentCanvasWrapper');
+      const maxW = canvasEl.offsetWidth;
+      const maxH = canvasEl.offsetHeight;
+
+      function onMouseMove(moveEvent) {
+        const dx = moveEvent.clientX - startX;
+        const dy = moveEvent.clientY - startY;
+        stamp.x = Math.max(0, Math.min(maxW - stamp.width, initialLeft + dx));
+        stamp.y = Math.max(0, Math.min(maxH - stamp.height, initialTop + dy));
+
+        const el = document.getElementById(stamp.id);
+        if (el) {
+          el.style.left = stamp.x + 'px';
+          el.style.top = stamp.y + 'px';
+        }
+      }
+
+      function onMouseUp() {
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
+      }
+
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+    }
+
+    // Thu phóng kích thước con dấu
+    function startStampResize(e, idx, corner) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const stamp = placedStamps[idx];
+      const startX = e.clientX;
+      const initialW = stamp.width;
+      const initialH = stamp.height;
+      const initialLeft = stamp.x;
+      const initialTop = stamp.y;
+      const ratio = initialW / initialH;
+
+      function onMouseMove(moveEvent) {
+        const dx = moveEvent.clientX - startX;
+        let newW = initialW;
+
+        if (corner === 'se' || corner === 'ne') {
+          newW = Math.max(50, initialW + dx);
+        } else {
+          newW = Math.max(50, initialW - dx);
+          stamp.x = initialLeft + (initialW - newW);
+        }
+
+        const newH = newW / ratio;
+        if (corner === 'ne' || corner === 'nw') {
+          stamp.y = initialTop + (initialH - newH);
+        }
+
+        stamp.width = Math.round(newW);
+        stamp.height = Math.round(newH);
+
+        const el = document.getElementById(stamp.id);
+        if (el) {
+          el.style.width = stamp.width + 'px';
+          el.style.height = stamp.height + 'px';
+          el.style.left = stamp.x + 'px';
+          el.style.top = stamp.y + 'px';
+        }
+      }
+
+      function onMouseUp() {
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
+        renderStamps();
+      }
+
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+    }
+
+  </script>
   <script>
     tailwind.config = {
       theme: {
@@ -93,6 +366,53 @@
   right: -5px;
   cursor: se-resize;
 }
+  
+    /* INTERACTIVE STAMP & PREVIEW STYLES */
+    .doc-canvas-container {
+      position: relative;
+      width: 100%;
+      height: 540px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .doc-canvas-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .stamp-box {
+      position: absolute;
+      touch-action: none;
+      user-select: none;
+      cursor: grab;
+      z-index: 35;
+      transition: box-shadow 0.15s ease;
+    }
+    .stamp-box:active {
+      cursor: grabbing;
+    }
+    .stamp-box.selected {
+      outline: 2px dashed #4f46e5;
+      outline-offset: 4px;
+      background: rgba(99, 102, 241, 0.05);
+    }
+    .stamp-handle {
+      width: 12px;
+      height: 12px;
+      background: #4f46e5;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      position: absolute;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
+    .handle-nw { top: -6px; left: -6px; cursor: nwse-resize; }
+    .handle-ne { top: -6px; right: -6px; cursor: nesw-resize; }
+    .handle-sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+    .handle-se { bottom: -6px; right: -6px; cursor: nwse-resize; }
+
   </style>
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
@@ -1175,4 +1495,128 @@
     }
   </script>
 </body>
-</html>
+</html<!-- KHU VỰC THAO TÁC XỬ LÝ HỒ SƠ & ĐÓNG DẤU CHỮ KÝ TRỰC QUAN -->
+              <div id="workspaceDetail" class="w-full h-full flex flex-col space-y-3" style="display: none;">
+                
+                <!-- HEADER HỒ SƠ & THANH CÔNG CỤ CHÈN DẤU -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-200">
+                  <div class="truncate">
+                    <h3 id="workSvTitle" class="text-sm md:text-base font-extrabold text-slate-900 leading-snug truncate">--</h3>
+                    <p id="workSvMeta" class="text-xs text-slate-500 font-medium truncate mt-0.5">--</p>
+                  </div>
+                  
+                  <!-- CỤM NÚT THAO TÁC CON DẤU & CHỮ KÝ -->
+                  <div class="flex items-center gap-2 shrink-0">
+                    <div class="relative">
+                      <button onclick="toggleStampDropdown()" type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95">
+                        <span>🔴</span> Thêm mẫu chữ ký / con dấu
+                      </button>
+
+                      <!-- POPUP DROPDOWN CHỌN MẪU -->
+                      <div id="stampDropdownMenu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 p-3 z-50 text-xs space-y-2">
+                        <div class="font-extrabold text-slate-700 text-[11px] uppercase tracking-wider pb-1 border-b border-slate-100">
+                          Chọn mẫu con dấu / chữ ký
+                        </div>
+                        <div class="space-y-1">
+                          <button onclick="addPresetStamp('doan')" type="button" class="w-full text-left p-2 hover:bg-indigo-50/60 rounded-xl flex items-center gap-2 text-slate-700 font-medium transition">
+                            <span class="text-rose-600 font-bold text-sm">🔴</span> Dấu tròn BCH Đoàn Trường
+                          </button>
+                          <button onclick="addPresetStamp('hoi')" type="button" class="w-full text-left p-2 hover:bg-indigo-50/60 rounded-xl flex items-center gap-2 text-slate-700 font-medium transition">
+                            <span class="text-rose-600 font-bold text-sm">🔴</span> Dấu Hội Sinh Viên Trường
+                          </button>
+                          <button onclick="addPresetSignature('Lê Thanh Hải')" type="button" class="w-full text-left p-2 hover:bg-indigo-50/60 rounded-xl flex items-center gap-2 text-slate-700 font-medium transition">
+                            <span class="text-blue-600 font-bold text-sm">✒️</span> Chữ ký ThS. Lê Thanh Hải
+                          </button>
+                          <button onclick="addPresetSignature('Nguyễn Lâm Nhựt Trí')" type="button" class="w-full text-left p-2 hover:bg-indigo-50/60 rounded-xl flex items-center gap-2 text-slate-700 font-medium transition">
+                            <span class="text-blue-600 font-bold text-sm">✒️</span> Chữ ký Nguyễn Lâm Nhựt Trí
+                          </button>
+                        </div>
+                        <div class="pt-2 border-t border-slate-100">
+                          <label class="w-full block text-center py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl cursor-pointer font-bold text-[11px] transition">
+                            📂 Tải ảnh dấu / chữ ký từ máy
+                            <input type="file" accept="image/*" onchange="handleStampFileUpload(event)" class="hidden" />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button onclick="clearAllStamps()" type="button" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 border border-rose-200 transition" title="Xóa toàn bộ con dấu đã chèn">
+                      <span>🗑️</span> Xóa dấu
+                    </button>
+                  </div>
+                </div>
+
+                <!-- KHUNG CẢNH BÁO LỊCH SỬ SỬA ĐỔI NỘI DUNG -->
+                <div id="qtvAuditWarningBox" class="bg-amber-50 border border-amber-200/90 rounded-2xl p-3 space-y-1.5 shadow-sm" style="display: none;">
+                  <div class="font-extrabold text-amber-900 text-[11px] flex items-center gap-1.5 uppercase tracking-wide">
+                    <span>⚠️</span> CẢNH BÁO LỊCH SỬ SỬA ĐỔI NỘI DUNG
+                  </div>
+                  <div id="qtvAuditLogContent" class="text-xs text-amber-800 font-medium leading-relaxed bg-white/90 p-2.5 rounded-xl border border-amber-100 font-mono">
+                    --
+                  </div>
+                </div>
+
+                <!-- KHUNG XEM TRƯỚC VĂN BẢN THỰC TẾ & LỚP PHỦ KÉO THẢ CON DẤU -->
+                <div class="flex-1 flex flex-col min-h-0 space-y-1.5">
+                  <div id="documentCanvasWrapper" class="doc-canvas-container relative flex-1">
+                    
+                    <!-- Nhúng trực tiếp Google Slides của sinh viên bằng iframe preview -->
+                    <iframe id="gxnPreviewIframe" src="" class="w-full h-full border-0 pointer-events-auto"></iframe>
+
+                    <!-- Lớp phủ (Overlay Layer) chứa con dấu / chữ ký kéo thả đè lên văn bản -->
+                    <div id="stampsOverlayLayer" class="absolute inset-0 pointer-events-none">
+                      <!-- Các con dấu chèn vào đây -->
+                    </div>
+
+                  </div>
+
+                  <!-- THANH ĐIỀU KHIỂN & GỢI Ý BÊN DƯỚI -->
+                  <div class="flex items-center justify-between text-[11px] text-slate-500 px-1 py-0.5">
+                    <div class="flex items-center gap-2">
+                      <span id="stampsCountBadge" class="font-semibold text-slate-600">Đã chèn: 0 dấu/chữ ký</span>
+                      <span class="text-slate-300">•</span>
+                      <a id="btnOpenSlide" href="#" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-bold inline-flex items-center gap-1">
+                        <span>🔗</span> Mở tab mới ↗
+                      </a>
+                    </div>
+                    <div class="text-slate-400 italic">
+                      💡 Nhấp vào con dấu để kéo di chuyển hoặc kéo 4 góc để phóng to/thu nhỏ
+                    </div>
+                  </div>
+                </div>
+
+                <!-- CÁC NÚT THAO TÁC DUYỆT (CTV / QTV) -->
+                <div class="pt-1 shrink-0">
+                  <!-- DÀNH CHO CTV -->
+                  <div id="ctvActionGroup" class="w-full flex justify-center" style="display: none;">
+                    <button onclick="submitCtvReview()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl text-xs transition shadow-md">
+                      Chuyển Ban Thư ký
+                    </button>
+                  </div>
+
+                  <!-- DÀNH CHO QTV -->
+                  <div id="qtvActionGroup" class="w-full grid grid-cols-3 gap-3" style="display: none;">
+                    <button onclick="rejectRequest()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-2 rounded-xl text-xs transition shadow-md">
+                      Từ chối
+                    </button>
+                    <button onclick="returnCtvRequest()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-2 rounded-xl text-xs transition shadow-md">
+                      Trả hồ sơ CTV
+                    </button>
+                    <button onclick="approveQtv()" id="btnApproveAction" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-2 rounded-xl text-xs transition shadow-md">
+                      Phê duyệt & Đóng dấu
+                    </button>
+                  </div>
+                </div>
+
+                <div id="adminActionToast" class="text-xs font-semibold text-center min-h-[16px]"></div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  >
