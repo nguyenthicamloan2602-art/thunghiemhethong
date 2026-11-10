@@ -2,1138 +2,326 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>HỆ THỐNG XÉT DUYỆT & ĐÓNG DẤU ĐIỆN TỬ - ĐOÀN HỘI Y DƯỢC</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+  <title>HỆ THỐNG QUẢN LÝ GIẤY CHỨNG NHẬN THANH NIÊN KHỎE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-            signature: ['Playfair Display', 'serif'],
-          },
-          colors: {
-            brand: {
-              50: '#eef2ff',
-              100: '#e0e7ff',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-            }
-          }
-        }
-      }
-    }
-  </script>
   <style>
-    * { font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 40%, #eef2ff 100%); }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    
-    /* Interactive stamp element */
-    .stamp-box {
-      touch-action: none;
-      user-select: none;
-    }
-    .stamp-box.selected {
-      border: 2px dashed #4f46e5;
-      background: rgba(99, 102, 241, 0.05);
-    }
-    .stamp-handle {
-      width: 14px;
-      height: 14px;
-      background: #4f46e5;
-      border: 2px solid #ffffff;
-      border-radius: 50%;
-      position: absolute;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-    }
+    * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+    body { background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 45%, #eef2ff 100%); }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
   </style>
 </head>
-<body class="text-slate-800 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
   <div class="flex-grow flex flex-col">
-    <!-- TOP NAVBAR -->
-    <header class="bg-gradient-to-r from-sky-700 via-indigo-700 to-blue-800 text-white shadow-lg py-3 px-6 md:px-10 flex flex-wrap justify-between items-center shrink-0 border-b border-indigo-400/30">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-xl shadow-inner border border-white/20">
-          📜
-        </div>
-        <div>
-          <h1 class="font-extrabold text-sm md:text-base tracking-wide uppercase">TRUNG TÂM PHÊ DUYỆT & ĐÓNG DẤU ĐIỆN TỬ</h1>
-          <p class="text-[11px] text-sky-200 uppercase font-semibold tracking-wider">Đoàn Thanh Niên - Hội Sinh Viên Đại học Y Dược TP. Hồ Chí Minh</p>
-        </div>
+    <!-- HEADER -->
+    <header class="bg-gradient-to-r from-sky-600 to-blue-600 text-white shadow-md py-3.5 px-6 flex justify-between items-center shrink-0">
+      <div>
+        <h1 class="font-extrabold text-sm md:text-base leading-tight uppercase">HỆ THỐNG QUẢN LÝ GIẤY CHỨNG NHẬN THANH NIÊN KHỎE</h1>
+        <p class="text-xs text-sky-100 uppercase font-medium">ĐOÀN THANH NIÊN - HỘI SINH VIÊN ĐẠI HỌC Y DƯỢC TP. HỒ CHÍ MINH</p>
       </div>
-
-      <div class="flex items-center gap-3 mt-2 sm:mt-0">
-        <div class="flex items-center bg-white/15 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/25 text-xs text-white shadow-sm font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2"></span>
-          🔑 QTV: Lê Thanh Hải
-        </div>
-        <button onclick="showAppNotification('Đang đồng bộ cơ sở dữ liệu Google Sheets...', 'info')" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-3.5 py-1.5 rounded-xl text-xs transition shadow flex items-center gap-1.5">
-          <span>🔄</span> Đồng bộ dữ liệu
+      <div id="userInfoHeader" class="flex items-center space-x-3">
+        <span id="userFullName" class="font-semibold text-white bg-sky-700/60 px-3 py-1.5 rounded-xl border border-sky-400 text-xs shadow-sm">👋 Sinh viên Y Dược</span>
+        <button onclick="goBackToPortal()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3 py-1.5 rounded-xl text-xs transition duration-200 shadow-sm flex items-center gap-1">
+          &larr; Quay lại Trang chủ
         </button>
       </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="flex-grow p-3 sm:p-5 md:p-6 flex items-start justify-center">
-      <div class="w-full max-w-[1680px] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-4 sm:p-6 md:p-7 border border-slate-200/80 space-y-5">
+    <main class="flex-grow p-4 md:p-6 flex items-center justify-center">
+      
+      <!-- CARD TRA CỨU GIẤY CHỨNG NHẬN -->
+      <div class="w-full max-w-3xl bg-white/95 backdrop-blur-md rounded-3xl shadow-xl p-6 md:p-8 space-y-6 border border-sky-100">
         
-        <!-- HEADER FILTER PANEL -->
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+        <!-- THÔNG TIN SINH VIÊN TỰ ĐỘNG ĐỌC TỪ URL -->
+        <div class="bg-sky-50/80 rounded-2xl p-6 border border-sky-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <div class="flex items-center gap-2.5">
-              <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">HỒ SƠ CẦN KÝ DUYỆT & ĐÓNG DẤU</h2>
-              <span id="badgeCounter" class="bg-indigo-100 text-indigo-700 text-xs font-black px-2.5 py-0.5 rounded-full border border-indigo-200">3 hồ sơ</span>
-            </div>
-            <p class="text-xs text-slate-500 font-medium mt-0.5">Kéo thả con dấu Ban Chấp Hành và chữ ký điện tử trực tiếp lên văn bản thẩm định</p>
+            <h3 id="svName" class="text-xl font-extrabold text-sky-900">Đang tải tên...</h3>
+            <p id="svMeta" class="text-sm text-sky-700 mt-1 font-medium">MSSV: -- • Lớp: -- • Trường/Khoa: --</p>
+          </div>
+          <span class="bg-sky-200/60 text-sky-800 text-xs font-bold px-3 py-1.5 rounded-xl border border-sky-300">🏅 Giấy chứng nhận</span>
+        </div>
+
+        <!-- FORM CHỌN NĂM HỌC VÀ CHƯƠNG TRÌNH -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1.5 text-left">
+            <label class="text-xs font-bold text-slate-700 uppercase tracking-wide">1. Chọn năm học:</label>
+            <select id="namHocSelect" onchange="handleNamHocChange()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-sky-500 shadow-sm">
+              <option value="">-- Chọn Năm Học --</option>
+            </select>
           </div>
 
-          <div class="flex items-center gap-2.5 flex-wrap">
-            <div class="relative">
-              <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 text-xs">🔍</span>
-              <input type="text" id="searchInput" oninput="filterProfiles()" placeholder="Tìm tên, MSSV..." class="pl-8 pr-3 py-1.5 bg-slate-50 hover:bg-white focus:bg-white text-xs rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-400 w-44 md:w-56 transition font-medium">
-            </div>
-
-            <select id="filterSource" onchange="filterProfiles()" class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 py-1.5 px-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer">
-              <option value="ALL">📂 Tất cả nguồn (CLB & GXN)</option>
-              <option value="GXN">🏅 Giấy xác nhận (GXN)</option>
-              <option value="CLB">🏢 Đơn vị CLB / Đội / Nhóm</option>
+          <div class="space-y-1.5 text-left">
+            <label class="text-xs font-bold text-slate-700 uppercase tracking-wide">2. Chọn chương trình đạt được:</label>
+            <select id="programSelect" disabled class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-sky-500 shadow-sm disabled:bg-slate-100 disabled:text-slate-400">
+              <option value="">-- Vui lòng chọn năm học trước --</option>
             </select>
-
-            <button onclick="filterProfiles()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 transition">
-              <span>🧹</span> Lọc
-            </button>
           </div>
         </div>
 
-        <!-- MAIN WORKSPACE: LIST (LEFT) & EDITOR (RIGHT) -->
-        <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
-          
-          <!-- LEFT COLUMN: VERTICAL TABS + LIST -->
-          <div class="xl:col-span-4 bg-slate-50/80 border border-slate-200/90 rounded-2xl p-3 sm:p-4 flex gap-3 h-[780px]">
-            
-            <!-- Category Tabs -->
-            <div class="w-32 sm:w-36 flex flex-col gap-2 shrink-0 border-r border-slate-200 pr-2.5">
-              <button onclick="switchTab('ALL')" id="tab-ALL" class="tab-btn active text-left p-2.5 rounded-xl border transition flex flex-col gap-0.5 bg-indigo-50 border-indigo-400 text-indigo-700 shadow-sm font-semibold">
-                <div class="text-xs font-bold flex justify-between items-center">
-                  <span>📋 Tất cả</span>
-                  <span id="tabCount-ALL" class="bg-indigo-600 text-white text-[10px] px-1.5 rounded-full font-bold">3</span>
-                </div>
-                <span class="text-[10px] text-indigo-500 font-medium">Toàn bộ hồ sơ</span>
-              </button>
+        <button id="btnSubmit" onclick="submitQuery()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-md flex justify-center items-center gap-2">
+          <span>🏅 TRA CỨU & TẠO GIẤY CHỨNG NHẬN</span>
+        </button>
 
-              <button onclick="switchTab('GXN')" id="tab-GXN" class="tab-btn text-left p-2.5 rounded-xl border transition flex flex-col gap-0.5 bg-white border-slate-200 text-slate-600 hover:bg-slate-100">
-                <div class="text-xs font-bold flex justify-between items-center">
-                  <span>✍️ Đã duyệt</span>
-                  <span id="tabCount-GXN" class="bg-amber-500 text-white text-[10px] px-1.5 rounded-full font-bold">2</span>
-                </div>
-                <span class="text-[10px] text-slate-400 font-medium">CTV đã gửi</span>
-              </button>
-
-              <button onclick="switchTab('CLB')" id="tab-CLB" class="tab-btn text-left p-2.5 rounded-xl border transition flex flex-col gap-0.5 bg-white border-slate-200 text-slate-600 hover:bg-slate-100">
-                <div class="text-xs font-bold flex justify-between items-center">
-                  <span>🏢 Chờ CLB</span>
-                  <span id="tabCount-CLB" class="bg-purple-600 text-white text-[10px] px-1.5 rounded-full font-bold">1</span>
-                </div>
-                <span class="text-[10px] text-slate-400 font-medium">Ký phê duyệt</span>
-              </button>
-            </div>
-
-            <!-- Profile Cards List -->
-            <div id="profileListContainer" class="flex-1 overflow-y-auto space-y-2.5 pr-1 custom-scrollbar">
-              <!-- Dynamically rendered -->
-            </div>
-          </div>
-
-          <!-- RIGHT COLUMN: INTERACTIVE STAMPING WORKSPACE -->
-          <div class="xl:col-span-8 bg-slate-100/70 rounded-2xl border border-slate-200 p-4 sm:p-5 flex flex-col h-[780px]">
-            
-            <!-- WORKSPACE TOOLBAR -->
-            <div class="bg-white px-4 py-3 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3 mb-3">
-              <div class="flex items-center gap-2">
-                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-                <h3 id="currentProfileTitle" class="font-bold text-slate-800 text-xs sm:text-sm">
-                  [GXN] Bùi Trần Minh Anh (611258224) - Lớp: GMHS25
-                </h3>
-              </div>
-
-              <!-- Action Bar Buttons -->
-              <div class="flex items-center gap-2 flex-wrap">
-                <!-- Dropdown / Stamp Trigger Button -->
-                <button onclick="openStampDrawer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition shadow-sm active:scale-95">
-                  <span>🔴</span> Thêm mẫu chữ ký / con dấu
-                </button>
-
-                <button onclick="clearAllStamps()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-semibold px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 transition border border-rose-200">
-                  <span>🗑️</span> Xóa dấu đã đặt
-                </button>
-
-                <div class="h-5 w-px bg-slate-200 mx-1"></div>
-
-                <div class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-xl border border-slate-200 text-xs">
-                  <button onclick="adjustZoom(-0.1)" class="w-5 h-5 flex items-center justify-center font-bold hover:bg-slate-200 rounded text-slate-700">-</button>
-                  <span id="zoomDisplay" class="font-semibold text-slate-600 text-[11px] px-1">100%</span>
-                  <button onclick="adjustZoom(0.1)" class="w-5 h-5 flex items-center justify-center font-bold hover:bg-slate-200 rounded text-slate-700">+</button>
-                </div>
-
-                <button onclick="finalizeAndApprove()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md active:scale-95">
-                  <span>✅</span> Phê duyệt & Đóng dấu
-                </button>
-              </div>
-            </div>
-
-            <!-- DOCUMENT VIEWER WRAPPER (SCROLLABLE & ZOOMABLE) -->
-            <div id="viewerScrollArea" class="flex-1 overflow-auto bg-slate-300/60 rounded-xl p-4 sm:p-6 flex justify-center items-start custom-scrollbar relative">
-              
-              <!-- THE A4 SIMULATED DOCUMENT -->
-              <div id="documentSheet" class="relative bg-white shadow-2xl rounded-sm transition-transform duration-100 border border-slate-300 origin-top select-none" style="width: 794px; min-height: 1123px; padding: 50px 65px;">
-                
-                <!-- DOCUMENT HEADER -->
-                <div class="grid grid-cols-2 text-center text-xs pb-4 border-b border-slate-300">
-                  <div>
-                    <p class="font-semibold uppercase text-slate-700">ĐOÀN TNCS HỒ CHÍ MINH</p>
-                    <p class="font-extrabold uppercase text-slate-900 text-xs mt-0.5">BCH ĐOÀN ĐẠI HỌC Y DƯỢC TP.HCM</p>
-                    <p class="text-[11px] text-slate-500 mt-1">Số: 142/GXN-ĐTN</p>
-                  </div>
-                  <div>
-                    <p class="font-bold uppercase text-slate-900 text-xs">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
-                    <p class="font-semibold text-xs text-slate-800">Độc lập - Tự do - Hạnh phúc</p>
-                    <p class="text-[11px] text-slate-500 italic mt-1">TP. Hồ Chí Minh, ngày 07 tháng 11 năm 2026</p>
-                  </div>
-                </div>
-
-                <!-- DOCUMENT TITLE -->
-                <div class="text-center my-6">
-                  <h2 class="text-xl font-extrabold uppercase tracking-wide text-slate-900">GIẤY XÁC NHẬN HOẠT ĐỘNG PHONG TRÀO</h2>
-                  <p class="text-xs text-slate-600 italic mt-1">(Dùng cho việc đánh giá Điểm Rèn Luyện & Xét Danh hiệu Sinh Viên 5 Tốt)</p>
-                </div>
-
-                <!-- STUDENT INFO SECTION -->
-                <div class="space-y-2 text-xs text-slate-800 leading-relaxed">
-                  <div class="flex">
-                    <span class="w-48 font-bold">Ban Chấp hành Đoàn trường xác nhận:</span>
-                    <span id="docSvName" class="font-extrabold text-indigo-900 uppercase">Bùi Trần Minh Anh</span>
-                  </div>
-                  <div class="grid grid-cols-2">
-                    <div><span class="font-bold">Mã số sinh viên:</span> <span id="docSvMssv" class="font-semibold">611258224</span></div>
-                    <div><span class="font-bold">Lớp:</span> <span id="docSvClass" class="font-semibold">GMHS25</span></div>
-                  </div>
-                  <div class="grid grid-cols-2">
-                    <div><span class="font-bold">Khoa:</span> Y học Cổ truyền</div>
-                    <div><span class="font-bold">Học kỳ xác nhận:</span> <span id="docSvTerm" class="font-semibold">Học kỳ 1 (2026 - 2027)</span></div>
-                  </div>
-                </div>
-
-                <!-- ACTIVITIES TABLE -->
-                <div class="mt-5">
-                  <p class="text-xs font-bold text-slate-800 mb-2">Đã hoàn thành xuất sắc các chương trình / hoạt động tình nguyện sau đây:</p>
-                  <table class="w-full text-xs border border-slate-300 text-left">
-                    <thead>
-                      <tr class="bg-slate-100 font-bold text-slate-800 border-b border-slate-300">
-                        <th class="p-2 w-8 text-center border-r border-slate-300">STT</th>
-                        <th class="p-2 border-r border-slate-300">Tên chương trình / Hoạt động</th>
-                        <th class="p-2 w-28 text-center border-r border-slate-300">Thời gian</th>
-                        <th class="p-2 w-24 text-center border-r border-slate-300">Vai trò</th>
-                        <th class="p-2 w-14 text-center">ĐRL</th>
-                      </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200">
-                      <tr>
-                        <td class="p-2 text-center border-r border-slate-300">1</td>
-                        <td class="p-2 border-r border-slate-300 font-semibold">Chiến dịch Mùa Hè Xanh 2026 - Mặt trận Đắk Lắk</td>
-                        <td class="p-2 text-center border-r border-slate-300">15/07 - 30/07/2026</td>
-                        <td class="p-2 text-center border-r border-slate-300">Đội phó</td>
-                        <td class="p-2 text-center font-bold text-emerald-700">+10</td>
-                      </tr>
-                      <tr>
-                        <td class="p-2 text-center border-r border-slate-300">2</td>
-                        <td class="p-2 border-r border-slate-300 font-semibold">Khám bệnh & Phát thuốc nhân đạo cộng đồng xã Ea H'leo</td>
-                        <td class="p-2 text-center border-r border-slate-300">20/07/2026</td>
-                        <td class="p-2 text-center border-r border-slate-300">Tình nguyện viên</td>
-                        <td class="p-2 text-center font-bold text-emerald-700">+5</td>
-                      </tr>
-                      <tr>
-                        <td class="p-2 text-center border-r border-slate-300">3</td>
-                        <td class="p-2 border-r border-slate-300 font-semibold">Tập huấn Kỹ năng Thường trực Cấp cứu Hè 2026</td>
-                        <td class="p-2 text-center border-r border-slate-300">10/08/2026</td>
-                        <td class="p-2 text-center border-r border-slate-300">Thành viên</td>
-                        <td class="p-2 text-center font-bold text-emerald-700">+3</td>
-                      </tr>
-                      <tr>
-                        <td class="p-2 text-center border-r border-slate-300">4</td>
-                        <td class="p-2 border-r border-slate-300 font-semibold">Hội thảo nghiên cứu Khoa học Sinh viên Y Dược lần thứ XIX</td>
-                        <td class="p-2 text-center border-r border-slate-300">05/09/2026</td>
-                        <td class="p-2 text-center border-r border-slate-300">Báo cáo viên</td>
-                        <td class="p-2 text-center font-bold text-emerald-700">+5</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <!-- SIGNATURE FOOTER AREA (TARGET ZONE) -->
-                <div class="mt-16 grid grid-cols-2 text-xs text-center relative" style="min-height: 180px;">
-                  <div>
-                    <p class="font-bold uppercase text-slate-700">NGƯỜI LẬP BIỂU</p>
-                    <p class="text-[11px] text-slate-500 italic mt-0.5">(Ký và ghi rõ họ tên)</p>
-                    <div class="h-20 flex items-center justify-center">
-                      <span class="font-signature text-2xl text-slate-600 rotate-[-4deg]">Dương Yến Ngọc</span>
-                    </div>
-                    <p class="font-semibold text-slate-800">Dương Yến Ngọc</p>
-                  </div>
-
-                  <!-- QTV / CLB SIGNATURE BOX -->
-                  <div id="targetStampZone" class="relative flex flex-col justify-between items-center rounded-xl p-2 transition">
-                    <div>
-                      <p class="font-extrabold uppercase text-slate-900">TM. BAN THƯỜNG VỤ ĐOÀN TRƯỜNG</p>
-                      <p class="text-[11px] text-slate-500 italic">BÍ THƯ / PHÓ BÍ THƯ KÝ DUYỆT</p>
-                    </div>
-
-                    <!-- Placeholder guide box -->
-                    <div id="stampDropGuide" class="border-2 border-dashed border-indigo-200 bg-indigo-50/40 rounded-xl p-3 my-2 text-slate-400 text-[10px] w-64 h-28 flex flex-col items-center justify-center pointer-events-none transition">
-                      <span class="text-base mb-1">📍</span>
-                      <span>Khu vực đóng dấu & ký tên</span>
-                      <span class="text-[9px] text-indigo-400">Kéo con dấu / chữ ký thả vào đây</span>
-                    </div>
-
-                    <div>
-                      <p class="font-bold text-slate-900 mt-2">ThS. DS. Lê Thanh Hải</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- QR CODE VERIFICATION MOCK -->
-                <div class="mt-8 pt-4 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-400">
-                  <div class="flex items-center gap-2">
-                    <div class="w-10 h-10 bg-slate-900 p-1 rounded flex items-center justify-center text-white text-[9px] font-mono leading-none">
-                      QR OK
-                    </div>
-                    <div>
-                      <div class="font-semibold text-slate-600">Mã tra cứu: GXN-2026-YDH-09418</div>
-                      <div>Quét QR để kiểm tra tính toàn vẹn của giấy xác nhận</div>
-                    </div>
-                  </div>
-                  <div class="text-right">
-                    Trang 1 / 1
-                  </div>
-                </div>
-
-                <!-- OVERLAY CONTAINER FOR DRAGGABLE STAMPS -->
-                <div id="stampsOverlayLayer" class="absolute inset-0 pointer-events-none">
-                  <!-- Dynamic stamps/signatures injected here -->
-                </div>
-
-              </div>
-
-            </div>
-
-            <!-- FOOTER STATUS TIP -->
-            <div class="mt-2.5 flex justify-between items-center text-[11px] text-slate-500 px-1">
-              <span class="flex items-center gap-1.5">
-                <span class="text-indigo-600 font-bold">💡 Mẹo:</span> 
-                Nhấp chuột vào con dấu trên văn bản để hiện các điểm kéo thu phóng (resize) góc hoặc xoay. Nhấn phím <kbd class="px-1.5 py-0.5 bg-white border rounded shadow-xs font-mono text-[10px]">Delete</kbd> để xóa nhanh.
-              </span>
-              <span id="activeElementsCount" class="font-medium text-slate-600">Đã chèn: 0 dấu/chữ ký</span>
-            </div>
-
-          </div>
-
+        <div id="loadingStatus" class="hidden text-center py-3 text-slate-500 text-xs font-medium space-x-2">
+          <span class="inline-block animate-spin text-sky-600">⏳</span>
+          <span id="loadingText">Hệ thống đang kiểm tra, vui lòng chờ...</span>
         </div>
 
       </div>
     </main>
-
-    <!-- FOOTER CREDITS -->
-    <footer class="w-full max-w-[1680px] mx-auto px-6 py-4 text-center text-slate-500 text-xs">
-      <p>© 2026 VĂN PHÒNG ĐOÀN THANH NIÊN - HỘI SINH VIÊN ĐẠI HỌC Y DƯỢC TP. HỒ CHÍ MINH</p>
-      <p class="text-[11px] text-slate-400 mt-0.5">Hệ thống xét duyệt GXN tích hợp công nghệ đóng dấu & ký số trực quan</p>
-    </footer>
   </div>
 
-  <!-- ============================================================== -->
-  <!-- MODAL / POPUP: THÊM MẪU CHỮ KÝ VÀ CON DẤU (THEO ĐÚNG YÊU CẦU 2 & 3) -->
-  <!-- ============================================================== -->
-  <div id="stampModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full border border-slate-100 overflow-hidden transform scale-95 transition-transform duration-200" id="stampModalCard">
-      
-      <!-- Modal Header -->
-      <div class="bg-gradient-to-r from-indigo-600 to-sky-600 p-4 sm:p-5 text-white flex justify-between items-center">
-        <div class="flex items-center gap-2.5">
-          <span class="text-xl">🔏</span>
-          <div>
-            <h3 class="font-bold text-sm sm:text-base leading-tight">CHỌN MẪU CON DẤU & CHỮ KÝ ĐIỆN TỬ</h3>
-            <p class="text-[11px] text-indigo-100">Chọn mẫu có sẵn hoặc tải lên dấu mộc cá nhân</p>
-          </div>
-        </div>
-        <button onclick="closeStampDrawer()" class="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center transition text-sm">
-          ✕
+  <!-- MODAL POPUP XEM TRƯỚC VÀ TẢI GIẤY CHỨNG NHẬN -->
+  <div id="resultModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+    <div class="bg-white p-6 rounded-3xl max-w-2xl w-full shadow-2xl space-y-4 text-center border border-sky-100">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="font-extrabold text-sky-900 text-base uppercase flex items-center gap-2">
+          <span>🎉</span> TRA CỨU GIẤY CHỨNG NHẬN THÀNH CÔNG
+        </h3>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">&times;</button>
+      </div>
+
+      <p class="text-xs text-slate-500 text-left">Hện thống đã xác minh thành công, bạn có thể xem trước hình ảnh giấy chứng nhận bên dưới và bấm nút lưu về thiết bị:</p>
+
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-2 max-h-[60vh] overflow-y-auto">
+        <img id="certPreview" src="" alt="Giấy chứng nhận xem trước" class="w-full h-auto rounded-xl shadow-sm border border-slate-200">
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition" onclick="closeModal()">Đóng cửa sổ</button>
+        <button id="btnDownload" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition flex justify-center items-center gap-1">
+          📥 Tải ảnh về máy (.PNG)
         </button>
       </div>
-
-      <!-- Modal Body Tabs -->
-      <div class="p-5 space-y-4">
-        
-        <div class="flex border-b border-slate-200 gap-4 text-xs font-bold text-slate-600">
-          <button onclick="toggleModalTab('preset')" id="mTab-preset" class="pb-2 border-b-2 border-indigo-600 text-indigo-600">
-            Mẫu Đoàn - Hội có sẵn
-          </button>
-          <button onclick="toggleModalTab('upload')" id="mTab-upload" class="pb-2 border-b-2 border-transparent hover:text-slate-900">
-            Tải ảnh dấu / Chữ ký từ máy
-          </button>
-        </div>
-
-        <!-- TAB 1: PRESET STAMPS & SIGNATURES -->
-        <div id="presetContainer" class="space-y-4">
-          <div class="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">Mẫu con dấu đỏ chính thức</div>
-          
-          <div class="grid grid-cols-2 gap-3">
-            
-            <!-- Stamp 1: Dấu tròn Ban Chấp Hành Đoàn (Đại học Y Dược TPHCM) -->
-            <div onclick="selectAndAddStamp('doan')" class="group p-3 border-2 border-slate-200 hover:border-indigo-500 rounded-2xl cursor-pointer bg-slate-50/50 hover:bg-indigo-50/30 transition flex flex-col items-center text-center">
-              <div class="w-28 h-28 flex items-center justify-center relative p-1 group-hover:scale-105 transition-transform">
-                <!-- SVG Mộc Đỏ Đoàn TNCS -->
-                <svg viewBox="0 0 100 100" class="w-full h-full text-red-600 fill-current opacity-90 drop-shadow-xs">
-                  <circle cx="50" cy="50" r="46" fill="none" stroke="#dc2626" stroke-width="2.5" />
-                  <circle cx="50" cy="50" r="33" fill="none" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3,1" />
-                  <path id="curveTop1" d="M 12 50 A 38 38 0 0 1 88 50" fill="none" />
-                  <path id="curveBot1" d="M 88 50 A 38 38 0 0 1 12 50" fill="none" />
-                  <text font-size="5.8" font-weight="900" fill="#dc2626" letter-spacing="0.5">
-                    <textPath href="#curveTop1" startOffset="50%" text-anchor="middle">BCH ĐOÀN TNCS HỒ CHÍ MINH</textPath>
-                  </text>
-                  <text font-size="5.2" font-weight="800" fill="#dc2626" letter-spacing="0.5">
-                    <textPath href="#curveBot1" startOffset="50%" text-anchor="middle">ĐẠI HỌC Y DƯỢC TP.HCM</textPath>
-                  </text>
-                  <polygon points="50,37 53,44 60,45 55,50 56,57 50,53 44,57 45,50 40,45 47,44" fill="#dc2626" />
-                  <text x="50" y="65" font-size="4.2" font-weight="bold" fill="#dc2626" text-anchor="middle">BAN CHẤP HÀNH</text>
-                </svg>
-              </div>
-              <span class="text-xs font-bold text-slate-800 mt-2">Dấu tròn Đoàn Trường</span>
-              <span class="text-[10px] text-slate-500">Mộc đỏ BCH Đoàn Đại học Y Dược</span>
-            </div>
-
-            <!-- Stamp 2: Dấu Hội Sinh Viên Việt Nam (Đại diện ảnh mẫu trong yêu cầu) -->
-            <div onclick="selectAndAddStamp('hoi')" class="group p-3 border-2 border-slate-200 hover:border-indigo-500 rounded-2xl cursor-pointer bg-slate-50/50 hover:bg-indigo-50/30 transition flex flex-col items-center text-center">
-              <div class="w-28 h-28 flex items-center justify-center relative p-1 group-hover:scale-105 transition-transform">
-                <!-- SVG Mộc Đỏ Hội Sinh Viên -->
-                <svg viewBox="0 0 100 100" class="w-full h-full text-red-600 fill-current opacity-90 drop-shadow-xs">
-                  <circle cx="50" cy="50" r="46" fill="none" stroke="#dc2626" stroke-width="2.5" />
-                  <circle cx="50" cy="50" r="33" fill="none" stroke="#dc2626" stroke-width="1.2" />
-                  <path id="curveHoiTop" d="M 12 50 A 38 38 0 0 1 88 50" fill="none" />
-                  <path id="curveHoiBot" d="M 88 50 A 38 38 0 0 1 12 50" fill="none" />
-                  <text font-size="5.6" font-weight="900" fill="#dc2626" letter-spacing="0.4">
-                    <textPath href="#curveHoiTop" startOffset="50%" text-anchor="middle">HỘI SINH VIÊN VIỆT NAM</textPath>
-                  </text>
-                  <text font-size="5.2" font-weight="800" fill="#dc2626">
-                    <textPath href="#curveHoiBot" startOffset="50%" text-anchor="middle">ĐẠI HỌC Y DƯỢC TP.HCM</textPath>
-                  </text>
-                  <!-- Biểu trưng ngọn lửa sinh viên -->
-                  <circle cx="50" cy="46" r="6" fill="#dc2626" />
-                  <text x="50" y="64" font-size="4.2" font-weight="bold" fill="#dc2626" text-anchor="middle">BAN THƯỜNG VỤ</text>
-                </svg>
-              </div>
-              <span class="text-xs font-bold text-slate-800 mt-2">Dấu Hội Sinh Viên</span>
-              <span class="text-[10px] text-slate-500">Mộc Hội Sinh Viên TP.HCM</span>
-            </div>
-
-          </div>
-
-          <div class="text-[11px] text-slate-500 font-semibold uppercase tracking-wider pt-2">Mẫu chữ ký điện tử lãnh đạo</div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <!-- Chữ ký mẫu 1 -->
-            <div onclick="selectAndAddSignature('ThS. DS. Lê Thanh Hải', 'signature1')" class="p-3 border border-slate-200 hover:border-indigo-500 rounded-xl cursor-pointer bg-slate-50 hover:bg-indigo-50/20 transition flex flex-col items-center">
-              <div class="font-signature text-2xl text-blue-900 py-2 rotate-[-5deg] tracking-wide">
-                Lê T. Hải
-              </div>
-              <span class="text-xs font-bold text-slate-800">ThS. DS. Lê Thanh Hải</span>
-              <span class="text-[10px] text-slate-500">Bí thư Đoàn Trường</span>
-            </div>
-
-            <!-- Chữ ký mẫu 2 -->
-            <div onclick="selectAndAddSignature('Nguyễn Lâm Nhựt Trí', 'signature2')" class="p-3 border border-slate-200 hover:border-indigo-500 rounded-xl cursor-pointer bg-slate-50 hover:bg-indigo-50/20 transition flex flex-col items-center">
-              <div class="font-signature text-2xl text-blue-900 py-2 rotate-[-3deg] tracking-wider">
-                Nhựt Trí
-              </div>
-              <span class="text-xs font-bold text-slate-800">Nguyễn Lâm Nhựt Trí</span>
-              <span class="text-[10px] text-slate-500">Phó Bí thư / Chủ tịch HSV</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- TAB 2: UPLOAD CUSTOM FILE -->
-        <div id="uploadContainer" class="hidden space-y-4">
-          <div class="border-2 border-dashed border-indigo-200 bg-indigo-50/20 rounded-2xl p-6 text-center hover:bg-indigo-50/40 transition">
-            <input type="file" id="customStampInput" accept="image/*" onchange="handleCustomStampUpload(event)" class="hidden">
-            <label for="customStampInput" class="cursor-pointer flex flex-col items-center">
-              <span class="text-3xl mb-2">📤</span>
-              <span class="text-xs font-bold text-indigo-700">Bấm để tải tệp PNG dấu / chữ ký nền trong suốt</span>
-              <span class="text-[11px] text-slate-500 mt-1">Hỗ trợ PNG, SVG hoặc JPG (Tối đa 5MB)</span>
-            </label>
-          </div>
-          
-          <div class="text-xs text-slate-500 bg-amber-50 p-3 rounded-xl border border-amber-200 leading-relaxed">
-            <b>Lưu ý nghiệp vụ:</b> Con dấu tải lên phải đảm bảo có định dạng PNG trong suốt (transparent) để không che lấp chữ ký và thể thức văn bản hành chính theo quy định.
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-2">
-        <button onclick="closeStampDrawer()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition">
-          Đóng
-        </button>
-      </div>
-
     </div>
   </div>
 
-  <!-- FLOATING NOTIFICATION BOX -->
-  <div id="appNotification" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-    <span id="notifIcon">ℹ️</span>
-    <span id="notifMessage">Thông báo</span>
-  </div>
+  <!-- FOOTER CHUẨN 3 CỘT -->
+  <footer id="portalFooter" class="w-full max-w-6xl mx-auto px-6 py-6 text-slate-500 text-[11.5px] mt-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left border-b border-sky-200/60 pb-3 mb-3">
+      <div>
+        <div class="text-[11px] font-extrabold uppercase text-sky-700 mb-1">HỆ THỐNG QUẢN LÝ HOẠT ĐỘNG</div>
+        <div class="text-slate-600 font-medium leading-relaxed">ĐOÀN THANH NIÊN - HỘI SINH VIÊN ĐẠI HỌC Y DƯỢC TPHCM</div>
+      </div>
+      
+      <div>
+        <div class="text-[11px] font-extrabold uppercase text-sky-700 mb-1">📍 ĐỊA CHỈ</div>
+        <div class="text-slate-600 font-medium leading-relaxed space-y-0.5">
+          <div>• 540 Ngô Gia Tự, Phường An Đông, TP. HCM</div>
+          <div>• 217 Hồng Bàng, Phường Chợ Lớn, TP. HCM</div>
+        </div>
+      </div>
+      
+      <div>
+        <div class="text-[11px] font-extrabold uppercase text-sky-700 mb-1">📧 LIÊN HỆ</div>
+        <div class="text-slate-600 font-medium leading-relaxed space-y-0.5">
+          <div>• Đoàn - Hội: <a href="mailto:vpdhump@gmail.com" class="text-sky-600 font-bold hover:underline">vpdhump@gmail.com</a></div>
+          <div>• Fanpage: <a href="https://www.facebook.com/tuoitreyduochcm" target="_blank" class="text-sky-600 font-bold hover:underline">Tuổi trẻ Y Dược</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center space-y-1">
+      <div class="font-bold text-slate-700 text-xs">© 2026 VĂN PHÒNG ĐOÀN THANH NIÊN - HỘI SINH VIÊN ĐẠI HỌC Y DƯỢC TP. HỒ CHÍ MINH</div>
+      <div class="italic text-[10.5px] text-slate-400">The website was developed by NTCL team</div>
+    </div>
+  </footer>
 
   <script>
-    // -------------------------------------------------------------
-    // DATA MOCK STATE
-    // -------------------------------------------------------------
-    const mockProfiles = [
-      {
-        id: "GXN01",
-        hoTen: "Bùi Trần Minh Anh",
-        mssv: "611258224",
-        lop: "GMHS25",
-        hk: "26-27.HK1",
-        ctv: "Dương Yến Ngọc",
-        qtv: "Lê Thanh Hải",
-        sourceType: "GXN",
-        time: "07/11/2026 07:45:55",
-        activitiesCount: 4,
-        status: "Đã thẩm định"
-      },
-      {
-        id: "GXN02",
-        hoTen: "Trần Thị Thuý Ngân",
-        mssv: "411235182",
-        lop: "DD23",
-        hk: "26-27.HK1",
-        ctv: "Trịnh Lê Anh Thư",
-        qtv: "Lê Thanh Hải",
-        sourceType: "GXN",
-        time: "07/11/2026 10:36:57",
-        activitiesCount: 3,
-        status: "Đã thẩm định"
-      },
-      {
-        id: "CLB01",
-        hoTen: "Nguyễn Dung Hạnh",
-        mssv: "311260053",
-        lop: "YHCT26",
-        hk: "CLB Blouse Trắng",
-        ctv: "Nguyễn Ngọc Gia Hân",
-        qtv: "Nguyễn Lâm Nhựt Trí",
-        sourceType: "CLB",
-        time: "08/11/2026 09:51:49",
-        activitiesCount: 2,
-        status: "Chờ duyệt CLB"
-      }
-    ];
+    const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbyMFqGLsp3SbrxDHEHe0yi0q_GTFulrvug61EZEVN6Vs64QJfpbwjb3KNpIMHlC5Hjh/exec";
+    var currentUser = null;
 
-    let currentSelectedId = "GXN01";
-    let activeTabFilter = "ALL";
-    let currentZoom = 1.0;
-    
-    // Stamps & Signatures on Document
-    let placedStamps = [];
-    let selectedStampIndex = null;
-
-    // -------------------------------------------------------------
-    // INITIALIZATION
-    // -------------------------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
-      renderProfileList();
-      selectProfile(currentSelectedId);
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
       
-      // Setup global keyboard shortcuts
-      window.addEventListener('keydown', (e) => {
-        if ((e.key === 'Delete' || e.key === 'Backspace') && selectedStampIndex !== null) {
-          // If not typing in input
-          if (document.activeElement.tagName !== 'INPUT') {
-            removeStamp(selectedStampIndex);
+      let name = urlParams.get('name') || urlParams.get('hoTen') || urlParams.get('svName');
+      let lop = urlParams.get('lop') || urlParams.get('svLop');
+      let khoa = urlParams.get('khoa') || urlParams.get('truongKhoa') || urlParams.get('tuongKhoa') || urlParams.get('svKhoa');
+
+      let mssv = "";
+      if (token) {
+        try { mssv = atob(token); } catch(e) {}
+      } else {
+        mssv = urlParams.get('mssv');
+      }
+
+      // Đọc trực tiếp từ data gốc trong SessionStorage (do index.html lưu khi đăng nhập thành công)
+      const savedStudent = sessionStorage.getItem('loggedStudent');
+      if (savedStudent) {
+        try {
+          const parsed = JSON.parse(savedStudent);
+          if (!mssv) mssv = parsed.mssv;
+          if (!name) name = parsed.hoTen || parsed.ten;
+          if (!lop) lop = parsed.lop;
+          // Lấy đúng khoa gốc từ API Gateway
+          if (!khoa || khoa === "undefined") {
+            khoa = parsed.truongKhoa || parsed.tuongKhoa || parsed.khoa || parsed.svKhoa;
           }
-        }
-      });
-    });
-
-    // -------------------------------------------------------------
-    // LIST & FILTER FUNCTIONS
-    // -------------------------------------------------------------
-    function switchTab(tab) {
-      activeTabFilter = tab;
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.className = "tab-btn text-left p-2.5 rounded-xl border transition flex flex-col gap-0.5 bg-white border-slate-200 text-slate-600 hover:bg-slate-100";
-      });
-
-      const activeEl = document.getElementById('tab-' + tab);
-      if (activeEl) {
-        activeEl.className = "tab-btn active text-left p-2.5 rounded-xl border transition flex flex-col gap-0.5 bg-indigo-50 border-indigo-400 text-indigo-700 shadow-sm font-semibold";
+        } catch(e) {}
       }
 
-      filterProfiles();
-    }
+      if (mssv) {
+        // Làm sạch chuỗi Khoa, nếu không có dữ liệu gốc thì để trường chung của Trường
+        let finalKhoa = (khoa && khoa !== "undefined") ? decodeURIComponent(khoa).trim() : "";
+        if (!finalKhoa) finalKhoa = "Đại học Y Dược TP.HCM";
 
-    function filterProfiles() {
-      const query = document.getElementById('searchInput').value.toLowerCase().trim();
-      const source = document.getElementById('filterSource').value;
-
-      const filtered = mockProfiles.filter(p => {
-        if (activeTabFilter !== "ALL" && p.sourceType !== activeTabFilter) return false;
-        if (source !== "ALL" && p.sourceType !== source) return false;
-        if (query) {
-          return p.hoTen.toLowerCase().includes(query) || p.mssv.includes(query);
-        }
-        return true;
-      });
-
-      renderProfileList(filtered);
-    }
-
-    function renderProfileList(list = mockProfiles) {
-      const container = document.getElementById('profileListContainer');
-      const badge = document.getElementById('badgeCounter');
-      badge.textContent = `${list.length} hồ sơ`;
-
-      if (list.length === 0) {
-        container.innerHTML = `
-          <div class="h-64 flex flex-col items-center justify-center text-slate-400 text-center text-xs">
-            <span class="text-3xl mb-1">📭</span>
-            <span>Không tìm thấy hồ sơ phù hợp</span>
-          </div>
-        `;
-        return;
-      }
-
-      let html = "";
-      list.forEach((item, index) => {
-        const isSelected = item.id === currentSelectedId;
-        const isClb = item.sourceType === "CLB";
-
-        html += `
-          <div onclick="selectProfile('${item.id}')" 
-               class="p-3.5 rounded-2xl border transition-all cursor-pointer text-xs space-y-1.5 shadow-sm 
-                      ${isSelected ? 'bg-indigo-50/90 border-indigo-500 ring-2 ring-indigo-200' : 'bg-white border-slate-200 hover:border-indigo-300'}">
-            <div class="flex justify-between items-start gap-1">
-              <span class="font-extrabold text-slate-800 text-xs">${index + 1}. ${item.hoTen}</span>
-              <span class="text-[9px] font-bold px-2 py-0.5 rounded-md shrink-0 
-                     ${isClb ? 'bg-purple-100 text-purple-700' : 'bg-sky-100 text-sky-700'}">
-                ${isClb ? 'CLB' : 'GXN'}
-              </span>
-            </div>
-            
-            <div class="text-[11px] text-slate-500 font-medium">MSSV: ${item.mssv} • Lớp: ${item.lop}</div>
-            <div class="text-[11px] text-slate-600 font-semibold truncate">
-              ${isClb ? 'Đơn vị: ' : 'Học kỳ: '}${item.hk}
-            </div>
-
-            <div class="flex justify-between items-center pt-1.5 border-t border-slate-100 text-[10px]">
-              <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="text-slate-500">👤 CTV: ${item.ctv}</span>
-                <span class="text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100">
-                  🔑 QTV: ${item.qtv}
-                </span>
-              </div>
-              <span class="text-slate-400 shrink-0">🕒 ${item.time.split(' ')[1] || item.time}</span>
-            </div>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
-    function selectProfile(id) {
-      currentSelectedId = id;
-      const profile = mockProfiles.find(p => p.id === id);
-      if (!profile) return;
-
-      // Update Header info
-      document.getElementById('currentProfileTitle').textContent = 
-        `[${profile.sourceType}] ${profile.hoTen} (${profile.mssv}) - Lớp: ${profile.lop}`;
-
-      // Update Document details
-      document.getElementById('docSvName').textContent = profile.hoTen;
-      document.getElementById('docSvMssv').textContent = profile.mssv;
-      document.getElementById('docSvClass').textContent = profile.lop;
-      document.getElementById('docSvTerm').textContent = profile.hk;
-
-      // Reset stamps on new profile switch
-      placedStamps = [];
-      selectedStampIndex = null;
-      renderStampsOnDocument();
-
-      // Refresh selection visual
-      filterProfiles();
-      showAppNotification(`Đã mở hồ sơ sinh viên: ${profile.hoTen}`, 'info');
-    }
-
-    // -------------------------------------------------------------
-    // MODAL DRAWER MANAGEMENT
-    // -------------------------------------------------------------
-    function openStampDrawer() {
-      const modal = document.getElementById('stampModal');
-      const card = document.getElementById('stampModalCard');
-      modal.classList.remove('pointer-events-none', 'opacity-0');
-      modal.classList.add('opacity-100');
-      card.classList.remove('scale-95');
-      card.classList.add('scale-100');
-    }
-
-    function closeStampDrawer() {
-      const modal = document.getElementById('stampModal');
-      const card = document.getElementById('stampModalCard');
-      modal.classList.add('opacity-0', 'pointer-events-none');
-      modal.classList.remove('opacity-100');
-      card.classList.remove('scale-100');
-      card.classList.add('scale-95');
-    }
-
-    function toggleModalTab(tab) {
-      const pTab = document.getElementById('mTab-preset');
-      const uTab = document.getElementById('mTab-upload');
-      const pBox = document.getElementById('presetContainer');
-      const uBox = document.getElementById('uploadContainer');
-
-      if (tab === 'preset') {
-        pTab.className = "pb-2 border-b-2 border-indigo-600 text-indigo-600";
-        uTab.className = "pb-2 border-b-2 border-transparent text-slate-500 hover:text-slate-900";
-        pBox.classList.remove('hidden');
-        uBox.classList.add('hidden');
-      } else {
-        uTab.className = "pb-2 border-b-2 border-indigo-600 text-indigo-600";
-        pTab.className = "pb-2 border-b-2 border-transparent text-slate-500 hover:text-slate-900";
-        uBox.classList.remove('hidden');
-        pBox.classList.add('hidden');
-      }
-    }
-
-    // -------------------------------------------------------------
-    // INTERACTIVE STAMP & SIGNATURE ENGINE
-    // -------------------------------------------------------------
-    function selectAndAddStamp(type) {
-      closeStampDrawer();
-
-      let stampContent = "";
-      let title = "";
-
-      if (type === 'doan') {
-        title = "Dấu BCH Đoàn Trường";
-        stampContent = `
-          <svg viewBox="0 0 100 100" class="w-full h-full text-red-600 fill-current opacity-90 drop-shadow-sm pointer-events-none">
-            <circle cx="50" cy="50" r="46" fill="none" stroke="#dc2626" stroke-width="2.5" />
-            <circle cx="50" cy="50" r="33" fill="none" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3,1" />
-            <path id="dynTop" d="M 12 50 A 38 38 0 0 1 88 50" fill="none" />
-            <path id="dynBot" d="M 88 50 A 38 38 0 0 1 12 50" fill="none" />
-            <text font-size="5.8" font-weight="900" fill="#dc2626" letter-spacing="0.5">
-              <textPath href="#dynTop" startOffset="50%" text-anchor="middle">BCH ĐOÀN TNCS HỒ CHÍ MINH</textPath>
-            </text>
-            <text font-size="5.2" font-weight="800" fill="#dc2626" letter-spacing="0.5">
-              <textPath href="#dynBot" startOffset="50%" text-anchor="middle">ĐẠI HỌC Y DƯỢC TP.HCM</textPath>
-            </text>
-            <polygon points="50,37 53,44 60,45 55,50 56,57 50,53 44,57 45,50 40,45 47,44" fill="#dc2626" />
-            <text x="50" y="65" font-size="4.2" font-weight="bold" fill="#dc2626" text-anchor="middle">BAN CHẤP HÀNH</text>
-          </svg>
-        `;
-      } else {
-        title = "Dấu Hội Sinh Viên";
-        stampContent = `
-          <svg viewBox="0 0 100 100" class="w-full h-full text-red-600 fill-current opacity-90 drop-shadow-sm pointer-events-none">
-            <circle cx="50" cy="50" r="46" fill="none" stroke="#dc2626" stroke-width="2.5" />
-            <circle cx="50" cy="50" r="33" fill="none" stroke="#dc2626" stroke-width="1.2" />
-            <path id="dynHoiTop" d="M 12 50 A 38 38 0 0 1 88 50" fill="none" />
-            <path id="dynHoiBot" d="M 88 50 A 38 38 0 0 1 12 50" fill="none" />
-            <text font-size="5.6" font-weight="900" fill="#dc2626" letter-spacing="0.4">
-              <textPath href="#dynHoiTop" startOffset="50%" text-anchor="middle">HỘI SINH VIÊN VIỆT NAM</textPath>
-            </text>
-            <text font-size="5.2" font-weight="800" fill="#dc2626">
-              <textPath href="#dynHoiBot" startOffset="50%" text-anchor="middle">ĐẠI HỌC Y DƯỢC TP.HCM</textPath>
-            </text>
-            <circle cx="50" cy="46" r="6" fill="#dc2626" />
-            <text x="50" y="64" font-size="4.2" font-weight="bold" fill="#dc2626" text-anchor="middle">BAN THƯỜNG VỤ</text>
-          </svg>
-        `;
-      }
-
-      // Default positioning near target signature zone
-      const newStamp = {
-        id: "stamp_" + Date.now(),
-        type: "stamp",
-        title: title,
-        content: stampContent,
-        x: 480, // document pixel coordinates
-        y: 840,
-        width: 140,
-        height: 140,
-        rotation: -4,
-        opacity: 0.92
-      };
-
-      placedStamps.push(newStamp);
-      selectedStampIndex = placedStamps.length - 1;
-      renderStampsOnDocument();
-      showAppNotification(`Đã thêm ${title} lên văn bản. Bạn có thể kéo thả để căn chỉnh!`, 'success');
-    }
-
-    function selectAndAddSignature(name, sigType) {
-      closeStampDrawer();
-
-      const newSig = {
-        id: "sig_" + Date.now(),
-        type: "signature",
-        title: "Chữ ký: " + name,
-        content: `
-          <div class="w-full h-full flex flex-col items-center justify-center pointer-events-none">
-            <span class="font-signature text-3xl sm:text-4xl text-blue-900 font-bold select-none drop-shadow-xs" style="font-family:'Playfair Display', serif; font-style: italic;">
-              ${name.split(' ').slice(-2).join(' ')}
-            </span>
-          </div>
-        `,
-        x: 520,
-        y: 890,
-        width: 160,
-        height: 80,
-        rotation: -6,
-        opacity: 0.95
-      };
-
-      placedStamps.push(newSig);
-      selectedStampIndex = placedStamps.length - 1;
-      renderStampsOnDocument();
-      showAppNotification(`Đã chèn chữ ký ${name}. Hãy di chuyển vào vị trí mong muốn!`, 'success');
-    }
-
-    function handleCustomStampUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        closeStampDrawer();
-        const customObj = {
-          id: "custom_" + Date.now(),
-          type: "custom",
-          title: "Ảnh tải lên (" + file.name + ")",
-          content: `<img src="${e.target.result}" class="w-full h-full object-contain pointer-events-none drop-shadow-sm" alt="Stamp" />`,
-          x: 490,
-          y: 860,
-          width: 140,
-          height: 140,
-          rotation: 0,
-          opacity: 0.95
+        currentUser = {
+          mssv: mssv,
+          hoTen: name ? decodeURIComponent(name) : "Sinh viên Y Dược",
+          lop: lop ? decodeURIComponent(lop) : "--",
+          tuongKhoa: finalKhoa
         };
 
-        placedStamps.push(customObj);
-        selectedStampIndex = placedStamps.length - 1;
-        renderStampsOnDocument();
-        showAppNotification("Đã chèn ảnh dấu/chữ ký từ thiết bị thành công!", 'success');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // -------------------------------------------------------------
-    // RENDERING & INTERACTION LISTENER BINDINGS
-    // -------------------------------------------------------------
-    function renderStampsOnDocument() {
-      const container = document.getElementById('stampsOverlayLayer');
-      const countEl = document.getElementById('activeElementsCount');
-      countEl.textContent = `Đã chèn: ${placedStamps.length} dấu/chữ ký`;
-
-      if (placedStamps.length === 0) {
-        container.innerHTML = "";
-        return;
-      }
-
-      let html = "";
-      placedStamps.forEach((stamp, idx) => {
-        const isSelected = idx === selectedStampIndex;
-        html += `
-          <div id="${stamp.id}" 
-               class="stamp-box pointer-events-auto absolute cursor-move ${isSelected ? 'selected' : ''}" 
-               style="left: ${stamp.x}px; top: ${stamp.y}px; width: ${stamp.width}px; height: ${stamp.height}px; transform: rotate(${stamp.rotation}deg); opacity: ${stamp.opacity};"
-               onmousedown="startDragStamp(event, ${idx})"
-               onclick="selectSingleStamp(event, ${idx})">
-            
-            ${stamp.content}
-
-            ${isSelected ? `
-              <!-- Control Handles -->
-              <div class="stamp-handle -top-1.5 -left-1.5 cursor-nwse-resize" onmousedown="startResize(event, ${idx}, 'nw')"></div>
-              <div class="stamp-handle -top-1.5 -right-1.5 cursor-nesw-resize" onmousedown="startResize(event, ${idx}, 'ne')"></div>
-              <div class="stamp-handle -bottom-1.5 -left-1.5 cursor-nesw-resize" onmousedown="startResize(event, ${idx}, 'sw')"></div>
-              <div class="stamp-handle -bottom-1.5 -right-1.5 cursor-nwse-resize" onmousedown="startResize(event, ${idx}, 'se')"></div>
-              
-              <!-- Quick Actions Bar on Selected Object -->
-              <div class="absolute -top-9 left-1/2 -translate-x-1/2 bg-slate-900 text-white rounded-lg px-2 py-1 flex items-center gap-1.5 shadow-xl text-[10px] whitespace-nowrap z-30">
-                <button onclick="rotateStamp(event, ${idx}, -5)" title="Xoay trái" class="hover:text-indigo-300">↺</button>
-                <button onclick="rotateStamp(event, ${idx}, 5)" title="Xoay phải" class="hover:text-indigo-300">↻</button>
-                <span class="text-slate-400">|</span>
-                <button onclick="changeOpacity(event, ${idx}, -0.1)" title="Giảm độ đậm" class="hover:text-indigo-300">🌓-</button>
-                <button onclick="changeOpacity(event, ${idx}, 0.1)" title="Tăng độ đậm" class="hover:text-indigo-300">🌓+</button>
-                <span class="text-slate-400">|</span>
-                <button onclick="removeStamp(${idx})" title="Xoá dấu" class="text-rose-400 hover:text-rose-300 font-bold">✕</button>
-              </div>
-            ` : ''}
-
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
-    function selectSingleStamp(e, idx) {
-      e.stopPropagation();
-      selectedStampIndex = idx;
-      renderStampsOnDocument();
-    }
-
-    // Deselect if clicked document background
-    document.getElementById('documentSheet').addEventListener('mousedown', (e) => {
-      if (e.target.id === 'documentSheet' || e.target.id === 'stampsOverlayLayer') {
-        selectedStampIndex = null;
-        renderStampsOnDocument();
+        document.getElementById('svName').textContent = currentUser.hoTen;
+        document.getElementById('svMeta').textContent = "MSSV: " + currentUser.mssv + " • Lớp: " + currentUser.lop + " • Trường/Khoa: " + currentUser.tuongKhoa;
+        document.getElementById('userFullName').textContent = "👋 " + currentUser.hoTen;
+        
+        loadSchoolYears();
+      } else {
+        alert("Không tìm thấy thông tin sinh viên!");
+        goBackToPortal();
       }
     });
 
-    // -------------------------------------------------------------
-    // DRAG AND DROP HANDLING
-    // -------------------------------------------------------------
-    function startDragStamp(e, idx) {
-      if (e.target.classList.contains('stamp-handle') || e.target.closest('button')) return;
-      e.preventDefault();
-      selectedStampIndex = idx;
-      renderStampsOnDocument();
+    // HÀM TỰ ĐỘNG LẤY DANH SÁCH TAB NĂM HỌC (NH ...) TỪ GOOGLE SHEET
+    function loadSchoolYears() {
+      const yearSelect = document.getElementById("namHocSelect");
+      yearSelect.innerHTML = '<option value="">Đang tải danh sách năm học...</option>';
 
-      const stamp = placedStamps[idx];
-      const startX = e.clientX;
-      const startY = e.clientY;
-      const initialLeft = stamp.x;
-      const initialTop = stamp.y;
-
-      function onMouseMove(moveEvent) {
-        const deltaX = (moveEvent.clientX - startX) / currentZoom;
-        const deltaY = (moveEvent.clientY - startY) / currentZoom;
-
-        // Limit coordinates inside the sheet width (794px) and min-height (1123px)
-        const newX = Math.max(0, Math.min(794 - stamp.width, initialLeft + deltaX));
-        const newY = Math.max(0, Math.min(1123 - stamp.height, initialTop + deltaY));
-
-        stamp.x = Math.round(newX);
-        stamp.y = Math.round(newY);
-
-        const el = document.getElementById(stamp.id);
-        if (el) {
-          el.style.left = `${stamp.x}px`;
-          el.style.top = `${stamp.y}px`;
+      fetch(GOOGLE_API_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "getSchoolYears" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        const list = data.schoolYears || [];
+        if (list.length > 0) {
+          yearSelect.innerHTML = '<option value="">-- Chọn Năm Học --</option>';
+          list.forEach(yearName => {
+            const opt = document.createElement("option");
+            opt.value = yearName;
+            opt.textContent = yearName;
+            yearSelect.appendChild(opt);
+          });
+        } else {
+          yearSelect.innerHTML = '<option value="">-- Không có dữ liệu năm học --</option>';
         }
-      }
-
-      function onMouseUp() {
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mouseup', onMouseUp);
-      }
-
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
+      })
+      .catch(err => {
+        console.error("Lỗi nạp năm học:", err);
+        yearSelect.innerHTML = '<option value="">-- Lỗi nạp dữ liệu năm học --</option>';
+      });
     }
 
-    // -------------------------------------------------------------
-    // RESIZE HANDLING
-    // -------------------------------------------------------------
-    function startResize(e, idx, corner) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const stamp = placedStamps[idx];
-      const startX = e.clientX;
-      const startY = e.clientY;
-      const initialWidth = stamp.width;
-      const initialHeight = stamp.height;
-      const initialLeft = stamp.x;
-      const initialTop = stamp.y;
-      const aspectRatio = initialWidth / initialHeight;
-
-      function onMouseMove(moveEvent) {
-        const deltaX = (moveEvent.clientX - startX) / currentZoom;
-        const deltaY = (moveEvent.clientY - startY) / currentZoom;
-
-        let newW = initialWidth;
-        let newH = initialHeight;
-
-        if (corner === 'se') {
-          newW = Math.max(50, initialWidth + deltaX);
-          newH = newW / aspectRatio;
-        } else if (corner === 'sw') {
-          newW = Math.max(50, initialWidth - deltaX);
-          newH = newW / aspectRatio;
-          stamp.x = initialLeft + (initialWidth - newW);
-        } else if (corner === 'ne') {
-          newW = Math.max(50, initialWidth + deltaX);
-          newH = newW / aspectRatio;
-          stamp.y = initialTop + (initialHeight - newH);
-        } else if (corner === 'nw') {
-          newW = Math.max(50, initialWidth - deltaX);
-          newH = newW / aspectRatio;
-          stamp.x = initialLeft + (initialWidth - newW);
-          stamp.y = initialTop + (initialHeight - newH);
-        }
-
-        stamp.width = Math.round(newW);
-        stamp.height = Math.round(newH);
-
-        const el = document.getElementById(stamp.id);
-        if (el) {
-          el.style.width = `${stamp.width}px`;
-          el.style.height = `${stamp.height}px`;
-          el.style.left = `${stamp.x}px`;
-          el.style.top = `${stamp.y}px`;
-        }
-      }
-
-      function onMouseUp() {
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mouseup', onMouseUp);
-        renderStampsOnDocument();
-      }
-
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
-    }
-
-    // -------------------------------------------------------------
-    // CONTROL MODIFIERS
-    // -------------------------------------------------------------
-    function rotateStamp(e, idx, deg) {
-      e.stopPropagation();
-      placedStamps[idx].rotation = (placedStamps[idx].rotation + deg) % 360;
-      renderStampsOnDocument();
-    }
-
-    function changeOpacity(e, idx, delta) {
-      e.stopPropagation();
-      let val = placedStamps[idx].opacity + delta;
-      val = Math.max(0.2, Math.min(1.0, val));
-      placedStamps[idx].opacity = parseFloat(val.toFixed(2));
-      renderStampsOnDocument();
-    }
-
-    function removeStamp(idx) {
-      const removed = placedStamps.splice(idx, 1);
-      selectedStampIndex = null;
-      renderStampsOnDocument();
-      showAppNotification(`Đã gỡ ${removed[0]?.title || 'dấu'} khỏi văn bản`, 'info');
-    }
-
-    function clearAllStamps() {
-      if (placedStamps.length === 0) return;
-      if (confirm("Bạn có chắc chắn muốn xóa toàn bộ con dấu và chữ ký đã đặt trên hồ sơ này?")) {
-        placedStamps = [];
-        selectedStampIndex = null;
-        renderStampsOnDocument();
-        showAppNotification("Đã làm sạch bản ký duyệt", 'info');
-      }
-    }
-
-    // -------------------------------------------------------------
-    // ZOOM CONTROL
-    // -------------------------------------------------------------
-    function adjustZoom(delta) {
-      currentZoom = Math.min(1.4, Math.max(0.6, currentZoom + delta));
-      const doc = document.getElementById('documentSheet');
-      doc.style.transform = `scale(${currentZoom})`;
-      document.getElementById('zoomDisplay').textContent = `${Math.round(currentZoom * 100)}%`;
-    }
-
-    // -------------------------------------------------------------
-    // FINAL APPROVAL & EXPORT SIMULATION
-    // -------------------------------------------------------------
-    function finalizeAndApprove() {
-      const profile = mockProfiles.find(p => p.id === currentSelectedId);
-      if (!profile) return;
-
-      if (placedStamps.length === 0) {
-        showAppNotification("⚠️ Vui lòng chèn ít nhất con dấu hoặc chữ ký trước khi phê duyệt!", "warning");
-        openStampDrawer();
+    function handleNamHocChange() {
+      const selectedSheet = document.getElementById('namHocSelect').value;
+      const progSelect = document.getElementById('programSelect');
+      
+      if (!selectedSheet) {
+        progSelect.innerHTML = '<option value="">-- Vui lòng chọn năm học trước --</option>';
+        progSelect.disabled = true;
         return;
       }
-
-      // Collect Stamp Coordinates & Export Data Package
-      const stampMetadata = placedStamps.map(s => ({
-        type: s.type,
-        x: s.x,
-        y: s.y,
-        width: s.width,
-        height: s.height,
-        rotation: s.rotation,
-        opacity: s.opacity
-      }));
-
-      console.log("DỮ LIỆU ĐÓNG DẤU GỬI VỀ SERVER:", {
-        profileId: profile.id,
-        mssv: profile.mssv,
-        hoTen: profile.hoTen,
-        approvedBy: "ThS. DS. Lê Thanh Hải (QTV)",
-        stamps: stampMetadata
-      });
-
-      showAppNotification(`🎉 Phê duyệt thành công hồ sơ của sinh viên ${profile.hoTen}! Hệ thống đang xuất ảnh và tạo mã QR...`, "success");
-
-      // Mark Profile as finished and pick next
-      profile.status = "Hoàn thành";
-      setTimeout(() => {
-        const remaining = mockProfiles.filter(p => p.id !== currentSelectedId);
-        if (remaining.length > 0) {
-          selectProfile(remaining[0].id);
-        } else {
-          showAppNotification("Đã hoàn tất tất cả hồ sơ trong phiên làm việc!", "success");
+      
+      progSelect.disabled = true;
+      progSelect.innerHTML = '<option value="">Đang kiểm tra chương trình đạt được...</option>';
+      
+      fetch(GOOGLE_API_URL, {
+        method: "POST",
+        body: JSON.stringify({ 
+          action: "getPrograms", 
+          namHoc: selectedSheet, 
+          mssv: currentUser.mssv 
+        })
+      })
+      .then(res => res.json())
+      .then(response => {
+        progSelect.innerHTML = '';
+        if(!response.success || !response.data || response.data.length === 0) {
+          progSelect.innerHTML = '<option value="">Bạn không có chứng nhận nào trong năm học này</option>';
+          return;
         }
-      }, 1400);
+        
+        progSelect.innerHTML = '<option value="">-- Chọn chương trình bạn đạt được --</option>';
+        response.data.forEach(progName => {
+          progSelect.innerHTML += `<option value="${progName}">${progName}</option>`;
+        });
+        progSelect.disabled = false;
+      })
+      .catch(err => {
+        console.error(err);
+        progSelect.innerHTML = '<option value="">Lỗi tải dữ liệu. Vui lòng thử lại!</option>';
+      });
     }
 
-    // -------------------------------------------------------------
-    // NOTIFICATION TOAST
-    // -------------------------------------------------------------
-    let notifTimer = null;
-    function showAppNotification(message, type = 'info') {
-      const box = document.getElementById('appNotification');
-      const msg = document.getElementById('notifMessage');
-      const icon = document.getElementById('notifIcon');
+    function submitQuery() {
+      const sheetNamHoc = document.getElementById('namHocSelect').value;
+      const program = document.getElementById('programSelect').value;
+      const btn = document.getElementById('btnSubmit');
+      const loader = document.getElementById('loadingStatus');
+      
+      if (!sheetNamHoc) { alert("Vui lòng lựa chọn Năm học!"); return; }
+      if (!program) { alert("Vui lòng lựa chọn chương trình cần tra cứu!"); return; }
+      
+      btn.disabled = true;
+      btn.classList.add('opacity-50');
+      if (loader) loader.classList.remove('hidden');
+      
+      fetch(GOOGLE_API_URL, {
+        method: "POST",
+        body: JSON.stringify({ 
+          action: "searchCert", 
+          mssv: currentUser.mssv, 
+          hoTen: currentUser.hoTen,
+          lop: currentUser.lop,
+          tuongKhoa: currentUser.tuongKhoa,
+          namHoc: sheetNamHoc, 
+          program: program 
+        })
+      })
+      .then(res => res.json())
+      .then(response => {
+        btn.disabled = false;
+        btn.classList.remove('opacity-50');
+        if (loader) loader.classList.add('hidden');
+        
+        if (response.success) {
+          document.getElementById('certPreview').src = response.base64Data;
+          
+          document.getElementById('btnDownload').onclick = function() {
+            const link = document.createElement('a');
+            link.href = response.base64Data;
+            link.download = response.fileName || ("GCN_" + currentUser.mssv + ".png");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          };
+          
+          document.getElementById('resultModal').classList.remove('hidden');
+        } else {
+          alert("Tra cứu thất bại: " + response.error);
+        }
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.classList.remove('opacity-50');
+        if (loader) loader.classList.add('hidden');
+        console.error(err);
+        alert("Đã xảy ra lỗi kết nối mạng với hệ thống máy chủ!");
+      });
+    }
 
-      clearTimeout(notifTimer);
-      msg.textContent = message;
+    function closeModal() {
+      document.getElementById('resultModal').classList.add('hidden');
+    }
 
-      if (type === 'success') {
-        icon.textContent = "✅";
-        box.className = "fixed bottom-6 right-6 z-50 bg-emerald-700 text-white text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 transition-all duration-300 transform translate-y-0 opacity-100";
-      } else if (type === 'warning') {
-        icon.textContent = "⚠️";
-        box.className = "fixed bottom-6 right-6 z-50 bg-amber-600 text-white text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 transition-all duration-300 transform translate-y-0 opacity-100";
-      } else {
-        icon.textContent = "ℹ️";
-        box.className = "fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 transition-all duration-300 transform translate-y-0 opacity-100";
-      }
-
-      notifTimer = setTimeout(() => {
-        box.classList.add('translate-y-20', 'opacity-0');
-      }, 3500);
+    function goBackToPortal() {
+      window.location.href = "/";
     }
   </script>
 </body>
