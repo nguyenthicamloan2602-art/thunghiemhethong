@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>HỆ THỐNG QUẢN LÝ GIẤY XÁC NHẬN HOẠT ĐỘNG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -80,7 +80,7 @@
     <main class="flex-grow p-4 md:p-6 flex items-start justify-center">
       <div class="w-full max-w-[96%] xl:max-w-[1560px] bg-white/95 backdrop-blur-md rounded-3xl shadow-xl p-6 md:p-8 space-y-6 border border-sky-100 transition-all">
         
-        <!-- CARD THÔNG TIN SINH VIÊN (MẶC ĐỊNH ẨN, CHỈ HIỆN KHI LÀ SINH VIÊN) -->
+        <!-- CARD THÔNG TIN SINH VIÊN (CHỈ HIỆN KHI LÀ SINH VIÊN) -->
         <div id="studentHeaderCard" class="bg-sky-50/80 rounded-2xl p-6 border border-sky-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4" style="display: none;">
           <div>
             <h3 id="svName" class="text-xl font-extrabold text-sky-900">Đang tải tên...</h3>
@@ -94,7 +94,7 @@
           </div>
         </div>
 
-        <!-- GIAO DIỆN CỦA SINH VIÊN (MẶC ĐỊNH ẨN) -->
+        <!-- GIAO DIỆN CỦA SINH VIÊN (CHỈ HIỆN KHI LÀ SINH VIÊN) -->
         <div id="studentFormPanel" class="grid grid-cols-1 md:grid-cols-12 gap-6" style="display: none;">
           <div class="md:col-span-7 space-y-3">
             <div class="flex justify-between items-center">
@@ -126,7 +126,7 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- GIAO DIỆN XÉT DUYỆT RỘNG (MẶC ĐỊNH HIỆN CHO QTV) -->
+        <!-- GIAO DIỆN XÉT DUYỆT RỘNG (MẶC ĐỊNH MỞ CHO QTV) -->
         <!-- ========================================== -->
         <div id="adminWorkspacePanel" class="space-y-4" style="display: block;">
           
@@ -163,7 +163,7 @@
           <!-- LƯỚI KHUNG LÀM VIỆC (CHIỀU CAO 720PX) -->
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            <!-- CỘT BÊN TRÁI: 3 TAB DỌC + DANH SÁCH THẺ THẬT (CHIẾM 5/12 PHẦN) -->
+            <!-- CỘT BÊN TRÁI: 3 TAB DỌC + DANH SÁCH THẺ THẬT -->
             <div class="lg:col-span-5 bg-slate-50/70 border border-slate-200/80 rounded-2xl p-4 flex gap-3.5 h-[720px]">
               
               <!-- 3 TAB DỌC -->
@@ -205,7 +205,7 @@
 
             </div>
 
-            <!-- CỘT BÊN PHẢI: KHUNG CHI TIẾT XEM SLIDE THẬT & ĐÓNG DẤU (CHIẾM 7/12 PHẦN) -->
+            <!-- CỘT BÊN PHẢI: KHUNG CHI TIẾT XEM SLIDE THẬT & ĐÓNG DẤU -->
             <div class="lg:col-span-7 bg-slate-50/60 rounded-3xl border border-slate-200/80 p-5 md:p-6 h-[720px] flex flex-col justify-between overflow-y-auto custom-scrollbar">
               
               <div id="workspaceEmpty" class="text-center space-y-2 py-24 m-auto">
@@ -231,31 +231,54 @@
                         <span>🔴</span> Thêm mẫu chữ ký / con dấu
                       </button>
 
-                      <!-- POPUP DROPDOWN -->
-                      <div id="stampDropdownMenu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 p-3 z-50 text-xs space-y-2">
-                        <div class="font-extrabold text-slate-700 text-[11px] uppercase tracking-wider pb-1 border-b border-slate-100">
-                          Chọn mẫu con dấu / chữ ký
+                      <!-- POPUP DROPDOWN QUẢN LÝ CHỮ KÝ ĐÃ LƯU -->
+                      <div id="stampDropdownMenu" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 z-50 text-xs space-y-3.5">
+                        
+                        <!-- Header -->
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                          <span class="font-extrabold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                            <span>🔏</span> Chữ ký & Con dấu của bạn
+                          </span>
+                          <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
+                            Đã lưu trữ
+                          </span>
                         </div>
-                        <div class="space-y-1">
-                          <button onclick="addPresetStamp('doan')" type="button" class="w-full text-left p-2 hover:bg-indigo-50/60 rounded-xl flex items-center gap-2 text-slate-700 font-medium transition">
-                            <span class="text-rose-600 font-bold text-sm">🔴</span> Dấu tròn BCH Đoàn Trường
-                          </button>
-                          <button onclick="addPresetStamp('hoi')" type="button" class="w-full text-left p-2 hover:bg-indigo-50/60 rounded-xl flex items-center gap-2 text-slate-700 font-medium transition">
-                            <span class="text-rose-600 font-bold text-sm">🔴</span> Dấu Hội Sinh Viên Trường
-                          </button>
-                          <button onclick="addPresetSignature('ThS. DS. Lê Thanh Hải')" type="button" class="w-full text-left p-2 hover:bg-indigo-50/60 rounded-xl flex items-center gap-2 text-slate-700 font-medium transition">
-                            <span class="text-blue-600 font-bold text-sm">✒️</span> Chữ ký ThS. Lê Thanh Hải
-                          </button>
-                          <button onclick="addPresetSignature('Nguyễn Lâm Nhựt Trí')" type="button" class="w-full text-left p-2 hover:bg-indigo-50/60 rounded-xl flex items-center gap-2 text-slate-700 font-medium transition">
-                            <span class="text-blue-600 font-bold text-sm">✒️</span> Chữ ký Nguyễn Lâm Nhựt Trí
-                          </button>
+
+                        <!-- Danh sách chữ ký cá nhân đã lưu trong hệ thống (localStorage) -->
+                        <div class="space-y-1.5">
+                          <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Chữ ký / Con dấu đã lưu:</div>
+                          <div id="savedSignaturesContainer" class="max-h-40 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
+                            <!-- Tự động sinh ra từ localStorage -->
+                          </div>
                         </div>
-                        <div class="pt-2 border-t border-slate-100">
-                          <label class="w-full block text-center py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl cursor-pointer font-bold text-[11px] transition">
-                            📂 Tải ảnh dấu / chữ ký từ máy
-                            <input type="file" accept="image/*" onchange="handleStampFileUpload(event)" class="hidden" />
-                          </label>
+
+                        <!-- Nút Tải lên và Lưu vào hệ thống -->
+                        <div class="pt-2 border-t border-slate-100 space-y-2">
+                          <div class="text-[11px] font-bold text-slate-700 uppercase tracking-wide">➕ Tải lên & Lưu mẫu mới:</div>
+                          <div class="flex items-center gap-2">
+                            <input type="text" id="customSigNameInput" placeholder="Tên mẫu (VD: Chữ ký cá nhân, Dấu đỏ...)" 
+                                   class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-700 outline-none focus:ring-2 focus:ring-indigo-400 font-medium transition" />
+                            <label class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-xl cursor-pointer transition text-xs shrink-0 flex items-center gap-1 shadow-sm active:scale-95">
+                              <span>📂</span> Chọn ảnh
+                              <input type="file" id="sigFileInput" accept="image/*" onchange="handleSaveNewSignature(event)" class="hidden" />
+                            </label>
+                          </div>
+                          <p class="text-[10px] text-slate-400 italic">Mẹo: Nên tải file PNG nền trong suốt để khi đóng dấu không che chữ.</p>
                         </div>
+
+                        <!-- Mẫu chuẩn Đoàn - Hội có sẵn của hệ thống -->
+                        <div class="pt-2 border-t border-slate-100 space-y-1.5">
+                          <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Mẫu Đoàn - Hội mặc định:</div>
+                          <div class="grid grid-cols-2 gap-1.5">
+                            <button onclick="addPresetStamp('doan')" type="button" class="text-left p-2 hover:bg-indigo-50/60 rounded-xl border border-slate-100 flex items-center gap-1.5 text-slate-700 font-medium transition">
+                              <span class="text-rose-600 font-bold">🔴</span> Dấu BCH Đoàn
+                            </button>
+                            <button onclick="addPresetStamp('hoi')" type="button" class="text-left p-2 hover:bg-indigo-50/60 rounded-xl border border-slate-100 flex items-center gap-1.5 text-slate-700 font-medium transition">
+                              <span class="text-rose-600 font-bold">🔴</span> Dấu Hội Sinh Viên
+                            </button>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
 
@@ -368,7 +391,6 @@
   </footer>
 
   <script>
-
     const GXN_API_URL = "https://script.google.com/macros/s/AKfycbwF5IVHxFXmM-gEoNEBP_j_qbS__q3EYKYKXAWmm1xuci7wUEmr4GeUaiQkrhrVrrp3/exec";
     var currentUser = null;
     var currentAdmin = null;
@@ -379,6 +401,141 @@
 
     var placedStamps = [];
     var selectedStampIndex = null;
+
+    // QUẢN LÝ LƯU TRỮ CHỮ KÝ VÀ DẤU CỦA NGƯỜI DÙNG (LOCALSTORAGE)
+    const STORAGE_KEY_SIGNATURES = "gxn_saved_user_signatures";
+
+    function getSavedSignatures() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY_SIGNATURES);
+        return data ? JSON.parse(data) : [];
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function saveSignaturesToStorage(list) {
+      try {
+        localStorage.setItem(STORAGE_KEY_SIGNATURES, JSON.stringify(list));
+      } catch(e) {
+        console.error("Lỗi lưu trữ:", e);
+      }
+    }
+
+    function renderSavedSignaturesList() {
+      const container = document.getElementById('savedSignaturesContainer');
+      if (!container) return;
+
+      const list = getSavedSignatures();
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-3 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-slate-400 text-[11px]">
+            Chưa có mẫu nào được lưu.<br>Tải lên ở bên dưới để hệ thống lưu giữ lại!
+          </div>
+        `;
+        return;
+      }
+
+      let html = "";
+      list.forEach((item) => {
+        html += `
+          <div class="flex items-center justify-between p-2 rounded-xl border border-slate-200/80 bg-slate-50/70 hover:bg-indigo-50/40 hover:border-indigo-300 transition group">
+            <div onclick="insertSavedSignature('${item.id}')" class="flex items-center gap-2.5 flex-1 cursor-pointer truncate mr-2">
+              <div class="w-9 h-9 bg-white border border-slate-200 rounded-lg p-0.5 shrink-0 flex items-center justify-center overflow-hidden shadow-xs">
+                <img src="${item.dataUrl}" alt="${item.name}" class="w-full h-full object-contain" />
+              </div>
+              <div class="truncate">
+                <div class="font-bold text-slate-800 text-xs truncate group-hover:text-indigo-700">${item.name}</div>
+                <div class="text-[10px] text-slate-400">${item.date || 'Đã lưu'}</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <button type="button" onclick="insertSavedSignature('${item.id}')" 
+                      class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2 py-1 rounded-lg text-[10px] transition shadow-xs">
+                Chèn
+              </button>
+              <button type="button" onclick="deleteSavedSignature('${item.id}', event)" 
+                      class="text-rose-400 hover:text-rose-600 p-1 rounded-lg text-xs transition" title="Xóa mẫu này">
+                🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function handleSaveNewSignature(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const nameInput = document.getElementById('customSigNameInput');
+      let sigName = nameInput && nameInput.value.trim() ? nameInput.value.trim() : (file.name.replace(/\.[^/.]+$/, "") || "Chữ ký cá nhân");
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        const newSigItem = {
+          id: "sig_" + Date.now(),
+          name: sigName,
+          dataUrl: dataUrl,
+          date: new Date().toLocaleDateString('vi-VN')
+        };
+
+        const list = getSavedSignatures();
+        list.unshift(newSigItem);
+        saveSignaturesToStorage(list);
+
+        if (nameInput) nameInput.value = "";
+        event.target.value = "";
+
+        renderSavedSignaturesList();
+        insertSavedSignature(newSigItem.id);
+
+        const toast = document.getElementById('adminActionToast');
+        if (toast) {
+          toast.className = "text-xs font-semibold text-center text-emerald-600 min-h-[16px]";
+          toast.textContent = `🎉 Đã lưu vĩnh viễn mẫu "${sigName}" vào hệ thống!`;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function deleteSavedSignature(id, event) {
+      if (event) event.stopPropagation();
+      if (!confirm("Bạn có chắc chắn muốn xóa mẫu chữ ký/con dấu này khỏi hệ thống lưu trữ?")) return;
+
+      let list = getSavedSignatures();
+      list = list.filter(item => item.id !== id);
+      saveSignaturesToStorage(list);
+      renderSavedSignaturesList();
+    }
+
+    function insertSavedSignature(id) {
+      const list = getSavedSignatures();
+      const item = list.find(s => s.id === id);
+      if (!item) return;
+
+      toggleStampDropdown();
+
+      const newStamp = {
+        id: "stamp_" + Date.now(),
+        type: "saved_custom",
+        title: item.name,
+        content: `<img src="${item.dataUrl}" class="w-full h-full object-contain pointer-events-none drop-shadow-sm" alt="${item.name}" />`,
+        x: 320,
+        y: 280,
+        width: 140,
+        height: 140,
+        rotation: 0,
+        opacity: 0.95
+      };
+
+      placedStamps.push(newStamp);
+      selectedStampIndex = placedStamps.length - 1;
+      renderStamps();
+    }
 
     const PRESET_SVGS = {
       'doan': `<svg viewBox="0 0 100 100" class="w-full h-full text-red-600 fill-current opacity-90 drop-shadow-sm pointer-events-none">
@@ -419,7 +576,6 @@
       const isAdminParam = urlParams.get('isAdmin');
       const savedAdmin = sessionStorage.getItem('loggedAdmin');
 
-      // KIỂM TRA: NẾU LÀ SINH VIÊN THỰC SỰ (CÓ MSSV VÀ KHÔNG PHẢI ADMIN)
       if ((mssv || savedStudent) && isAdminParam !== "true" && !savedAdmin) {
         let name = urlParams.get('name') || urlParams.get('hoTen');
         let lop = urlParams.get('lop');
@@ -457,7 +613,6 @@
         return;
       }
 
-      // MẶC ĐỊNH MỞ GIAO DIỆN QTV / CTV NẾU KHÔNG PHẢI SINH VIÊN
       let adminRole = urlParams.get('role');
       let adminName = urlParams.get('name');
 
@@ -481,13 +636,10 @@
 
       const tabNav = document.getElementById('adminVerticalTabsNav');
       const qtvFilterEl = document.getElementById('filterQtvSelect');
-      if (tabNav) {
-        tabNav.style.display = (currentAdmin.role === "QTV") ? 'flex' : 'none';
-      }
-      if (qtvFilterEl) {
-        qtvFilterEl.style.display = (currentAdmin.role === "QTV") ? 'inline-block' : 'none';
-      }
+      if (tabNav) tabNav.style.display = (currentAdmin.role === "QTV") ? 'flex' : 'none';
+      if (qtvFilterEl) qtvFilterEl.style.display = (currentAdmin.role === "QTV") ? 'inline-block' : 'none';
 
+      renderSavedSignaturesList();
       reloadPendingAdmin();
     });
 
@@ -786,7 +938,12 @@
 
     function toggleStampDropdown() {
       const menu = document.getElementById('stampDropdownMenu');
-      if (menu) menu.classList.toggle('hidden');
+      if (menu) {
+        menu.classList.toggle('hidden');
+        if (!menu.classList.contains('hidden')) {
+          renderSavedSignaturesList();
+        }
+      }
     }
 
     document.addEventListener('click', function(e) {
@@ -812,50 +969,6 @@
       placedStamps.push(newStamp);
       selectedStampIndex = placedStamps.length - 1;
       renderStamps();
-    }
-
-    function addPresetSignature(name) {
-      toggleStampDropdown();
-      const newSig = {
-        id: "sig_" + Date.now(),
-        type: "signature",
-        content: `<div class="w-full h-full flex items-center justify-center pointer-events-none select-none text-2xl md:text-3xl font-serif italic text-blue-900 font-bold drop-shadow-xs rotate-[-5deg]">
-          ${name.split(' ').slice(-2).join(' ')}
-        </div>`,
-        x: 340,
-        y: 330,
-        width: 160,
-        height: 80,
-        rotation: -4,
-        opacity: 0.95
-      };
-      placedStamps.push(newSig);
-      selectedStampIndex = placedStamps.length - 1;
-      renderStamps();
-    }
-
-    function handleStampFileUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        toggleStampDropdown();
-        const customObj = {
-          id: "custom_" + Date.now(),
-          type: "custom",
-          content: `<img src="${e.target.result}" class="w-full h-full object-contain pointer-events-none drop-shadow-sm" alt="Stamp" />`,
-          x: 320,
-          y: 280,
-          width: 140,
-          height: 140,
-          rotation: 0,
-          opacity: 0.95
-        };
-        placedStamps.push(customObj);
-        selectedStampIndex = placedStamps.length - 1;
-        renderStamps();
-      };
-      reader.readAsDataURL(file);
     }
 
     function clearAllStamps() {
@@ -1035,7 +1148,6 @@
         if (res.success) {
           toast.className = "text-xs font-semibold text-center text-emerald-600 min-h-[16px]";
           toast.textContent = "🎉 Đã chuyển hồ sơ thành công!";
-          
           allPendingRequests = allPendingRequests.filter(r => r.slideId !== selectedRequest.slideId);
           selectedRequest = null;
           document.getElementById('workspaceEmpty').style.display = 'block';
@@ -1345,7 +1457,6 @@
     function goBackToPortal() {
       window.location.href = "/";
     }
-
   </script>
 </body>
 </html>
