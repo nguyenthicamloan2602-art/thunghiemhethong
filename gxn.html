@@ -417,7 +417,8 @@
       let mssv = token ? atob(token) : urlParams.get('mssv');
       const savedStudent = sessionStorage.getItem('loggedStudent');
 
-      if (mssv || (savedStudent && !urlParams.get('isAdmin'))) {
+      // Chỉ vào giao diện Sinh viên KHI VÀ CHỈ KHI có MSSV rõ ràng
+      if (mssv || (savedStudent && urlParams.get('isAdmin') !== "true")) {
         let name = urlParams.get('name') || urlParams.get('hoTen');
         let lop = urlParams.get('lop');
         let khoa = urlParams.get('khoa') || urlParams.get('truongKhoa') || urlParams.get('tuongKhoa') || urlParams.get('svKhoa');
@@ -432,8 +433,7 @@
           } catch(e) {}
         }
 
-        let finalKhoa = (khoa && khoa !== "undefined") ? decodeURIComponent(khoa).trim() : "";
-        if (!finalKhoa) finalKhoa = "Đại học Y Dược TP.HCM";
+        let finalKhoa = (khoa && khoa !== "undefined") ? decodeURIComponent(khoa).trim() : "Đại học Y Dược TP.HCM";
 
         currentUser = {
           mssv: mssv,
@@ -455,41 +455,26 @@
         return;
       }
 
-      const isAdmin = urlParams.get('isAdmin');
-      const adminRole = urlParams.get('role');
-      const adminName = urlParams.get('name');
-      const savedAdmin = sessionStorage.getItem('loggedAdmin');
+      // MẶC ĐỊNH CHO TẤT CẢ TRƯỜNG HỢP CÒN LẠI: VÀO THẲNG GIAO DIỆN QTV
+      const adminRole = urlParams.get('role') || "QTV";
+      const adminName = urlParams.get('name') || "Lê Thanh Hải";
 
-      if (isAdmin === "true" || (savedAdmin && isAdmin !== "false")) {
-        let adminObj = {};
-        if (savedAdmin) {
-          try { adminObj = JSON.parse(savedAdmin); } catch(e) {}
-        }
-        
-        currentAdmin = {
-          role: adminRole || adminObj.role || "CTV",
-          name: adminName ? decodeURIComponent(adminName) : (adminObj.name || "CÁN BỘ")
-        };
+      currentAdmin = {
+        role: adminRole,
+        name: decodeURIComponent(adminName)
+      };
 
-        document.getElementById('userFullName').textContent = "🔑 " + currentAdmin.name;
-        document.getElementById('studentHeaderCard').style.display = 'none';
-        document.getElementById('studentFormPanel').style.display = 'none';
-        document.getElementById('adminWorkspacePanel').style.display = 'block';
+      document.getElementById('userFullName').textContent = "🔑 " + currentAdmin.name;
+      document.getElementById('studentHeaderCard').style.display = 'none';
+      document.getElementById('studentFormPanel').style.display = 'none';
+      document.getElementById('adminWorkspacePanel').style.display = 'block';
 
-        const tabNav = document.getElementById('adminVerticalTabsNav');
-        const qtvFilterEl = document.getElementById('filterQtvSelect');
-        if (tabNav) {
-          tabNav.style.display = (currentAdmin.role === "QTV") ? 'flex' : 'none';
-        }
-        if (qtvFilterEl) {
-          qtvFilterEl.style.display = (currentAdmin.role === "QTV") ? 'inline-block' : 'none';
-        }
+      const tabNav = document.getElementById('adminVerticalTabsNav');
+      const qtvFilterEl = document.getElementById('filterQtvSelect');
+      if (tabNav) tabNav.style.display = (currentAdmin.role === "QTV") ? 'flex' : 'none';
+      if (qtvFilterEl) qtvFilterEl.style.display = (currentAdmin.role === "QTV") ? 'inline-block' : 'none';
 
-        reloadPendingAdmin();
-        return; 
-      }
-
-      goBackToPortal();
+      reloadPendingAdmin();
     });
 
     function normalizeStr(str) {
