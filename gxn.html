@@ -19,7 +19,7 @@
     .slide-preview-container {
       position: relative;
       width: 100%;
-      height: 480px;
+      height: 490px;
       background: #e2e8f0;
       border: 1px solid #cbd5e1;
       border-radius: 16px;
@@ -71,7 +71,7 @@
         <p class="text-xs text-sky-100 uppercase font-medium">ĐOÀN THANH NIÊN - HỘI SINH VIÊN ĐẠI HỌC Y DƯỢC TP. HỒ CHÍ MINH</p>
       </div>
       <div id="userInfoHeader" class="flex items-center space-x-3">
-        <span id="userFullName" class="font-semibold text-white bg-sky-700/60 px-3.5 py-1.5 rounded-xl border border-sky-400 text-xs shadow-sm">👋 Sinh viên Y Dược</span>
+        <span id="userFullName" class="font-semibold text-white bg-sky-700/60 px-3.5 py-1.5 rounded-xl border border-sky-400 text-xs shadow-sm">🔑 Lê Thanh Hải</span>
         <button onclick="goBackToPortal()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs transition shadow-sm">&larr; Quay lại Trang chủ</button>
       </div>
     </header>
@@ -80,8 +80,8 @@
     <main class="flex-grow p-4 md:p-6 flex items-start justify-center">
       <div class="w-full max-w-[96%] xl:max-w-[1560px] bg-white/95 backdrop-blur-md rounded-3xl shadow-xl p-6 md:p-8 space-y-6 border border-sky-100 transition-all">
         
-        <!-- CARD THÔNG TIN SINH VIÊN -->
-        <div id="studentHeaderCard" class="bg-sky-50/80 rounded-2xl p-6 border border-sky-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <!-- CARD THÔNG TIN SINH VIÊN (MẶC ĐỊNH ẨN, CHỈ HIỆN KHI LÀ SINH VIÊN) -->
+        <div id="studentHeaderCard" class="bg-sky-50/80 rounded-2xl p-6 border border-sky-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4" style="display: none;">
           <div>
             <h3 id="svName" class="text-xl font-extrabold text-sky-900">Đang tải tên...</h3>
             <p id="svMeta" class="text-sm text-sky-700 mt-1 font-medium">MSSV: -- • Lớp: -- • Trường/Khoa: --</p>
@@ -94,8 +94,8 @@
           </div>
         </div>
 
-        <!-- GIAO DIỆN CỦA SINH VIÊN -->
-        <div id="studentFormPanel" class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- GIAO DIỆN CỦA SINH VIÊN (MẶC ĐỊNH ẨN) -->
+        <div id="studentFormPanel" class="grid grid-cols-1 md:grid-cols-12 gap-6" style="display: none;">
           <div class="md:col-span-7 space-y-3">
             <div class="flex justify-between items-center">
               <h4 class="font-extrabold text-slate-800 text-sm uppercase tracking-wide">Danh sách hoạt động của bạn</h4>
@@ -126,9 +126,9 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- GIAO DIỆN XÉT DUYỆT RỘNG (DÀNH CHO CTV / QTV) -->
+        <!-- GIAO DIỆN XÉT DUYỆT RỘNG (MẶC ĐỊNH HIỆN CHO QTV) -->
         <!-- ========================================== -->
-        <div id="adminWorkspacePanel" class="space-y-4" style="display: none;">
+        <div id="adminWorkspacePanel" class="space-y-4" style="display: block;">
           
           <!-- THANH HEADER PANEL -->
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100">
@@ -150,7 +150,7 @@
 
               <select id="filterQtvSelect" onchange="filterAndRenderCurrentTab()" 
                       class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer"
-                      style="display: none;">
+                      style="display: inline-block;">
                 <option value="ALL">🔑 Tất cả QTV</option>
               </select>
 
@@ -167,7 +167,7 @@
             <div class="lg:col-span-5 bg-slate-50/70 border border-slate-200/80 rounded-2xl p-4 flex gap-3.5 h-[720px]">
               
               <!-- 3 TAB DỌC -->
-              <div id="adminVerticalTabsNav" class="w-36 flex flex-col gap-2.5 shrink-0 border-r border-slate-200/80 pr-2 select-none" style="display: none;">
+              <div id="adminVerticalTabsNav" class="w-36 flex flex-col gap-2.5 shrink-0 border-r border-slate-200/80 pr-2 select-none" style="display: flex;">
                 
                 <button id="vtab-CLB" onclick="switchVerticalTab('CLB')" 
                         class="vtab-btn text-left p-3 rounded-xl border transition flex flex-col gap-1 bg-indigo-50 border-indigo-300 text-indigo-700 shadow-sm">
@@ -368,6 +368,7 @@
   </footer>
 
   <script>
+
     const GXN_API_URL = "https://script.google.com/macros/s/AKfycbwF5IVHxFXmM-gEoNEBP_j_qbS__q3EYKYKXAWmm1xuci7wUEmr4GeUaiQkrhrVrrp3/exec";
     var currentUser = null;
     var currentAdmin = null;
@@ -376,7 +377,6 @@
     var allPendingRequests = [];
     var currentActiveVerticalTab = 'CLB';
 
-    // CON DẤU & CHỮ KÝ ĐANG ĐẶT TRÊN MẶT BẰNG TÀI LIỆU
     var placedStamps = [];
     var selectedStampIndex = null;
 
@@ -416,9 +416,11 @@
       const token = urlParams.get('token');
       let mssv = token ? atob(token) : urlParams.get('mssv');
       const savedStudent = sessionStorage.getItem('loggedStudent');
+      const isAdminParam = urlParams.get('isAdmin');
+      const savedAdmin = sessionStorage.getItem('loggedAdmin');
 
-      // Chỉ vào giao diện Sinh viên KHI VÀ CHỈ KHI có MSSV rõ ràng
-      if (mssv || (savedStudent && urlParams.get('isAdmin') !== "true")) {
+      // KIỂM TRA: NẾU LÀ SINH VIÊN THỰC SỰ (CÓ MSSV VÀ KHÔNG PHẢI ADMIN)
+      if ((mssv || savedStudent) && isAdminParam !== "true" && !savedAdmin) {
         let name = urlParams.get('name') || urlParams.get('hoTen');
         let lop = urlParams.get('lop');
         let khoa = urlParams.get('khoa') || urlParams.get('truongKhoa') || urlParams.get('tuongKhoa') || urlParams.get('svKhoa');
@@ -455,13 +457,21 @@
         return;
       }
 
-      // MẶC ĐỊNH CHO TẤT CẢ TRƯỜNG HỢP CÒN LẠI: VÀO THẲNG GIAO DIỆN QTV
-      const adminRole = urlParams.get('role') || "QTV";
-      const adminName = urlParams.get('name') || "Lê Thanh Hải";
+      // MẶC ĐỊNH MỞ GIAO DIỆN QTV / CTV NẾU KHÔNG PHẢI SINH VIÊN
+      let adminRole = urlParams.get('role');
+      let adminName = urlParams.get('name');
+
+      if (savedAdmin) {
+        try {
+          const adminObj = JSON.parse(savedAdmin);
+          if (!adminRole) adminRole = adminObj.role;
+          if (!adminName) adminName = adminObj.name;
+        } catch(e) {}
+      }
 
       currentAdmin = {
-        role: adminRole,
-        name: decodeURIComponent(adminName)
+        role: adminRole || "QTV",
+        name: adminName ? decodeURIComponent(adminName) : "Lê Thanh Hải"
       };
 
       document.getElementById('userFullName').textContent = "🔑 " + currentAdmin.name;
@@ -471,8 +481,12 @@
 
       const tabNav = document.getElementById('adminVerticalTabsNav');
       const qtvFilterEl = document.getElementById('filterQtvSelect');
-      if (tabNav) tabNav.style.display = (currentAdmin.role === "QTV") ? 'flex' : 'none';
-      if (qtvFilterEl) qtvFilterEl.style.display = (currentAdmin.role === "QTV") ? 'inline-block' : 'none';
+      if (tabNav) {
+        tabNav.style.display = (currentAdmin.role === "QTV") ? 'flex' : 'none';
+      }
+      if (qtvFilterEl) {
+        qtvFilterEl.style.display = (currentAdmin.role === "QTV") ? 'inline-block' : 'none';
+      }
 
       reloadPendingAdmin();
     });
@@ -480,9 +494,8 @@
     function normalizeStr(str) {
       if (!str) return "";
       return str.toString().trim().toLowerCase()
-        .normalize("NFD").replace(/[̀-ͯ]/g, "")
-        .replace(/[
-]+/g, " ").replace(/\s+/g, " ");
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ");
     }
 
     function parseTimestamp(timeStr) {
@@ -721,7 +734,6 @@
       filterAndRenderCurrentTab();
     }
 
-    // CHỌN HỒ SƠ VÀ NẠP SLIDE THẬT CỦA SINH VIÊN
     function selectRequest(item) {
       selectedRequest = item;
       document.getElementById('workspaceEmpty').style.display = 'none';
@@ -731,7 +743,6 @@
       document.getElementById('workSvTitle').textContent = (isClb ? "[CLB] " : "[GXN] ") + item.hoTen + " (" + item.mssv + ")";
       document.getElementById('workSvMeta').textContent = "Lớp: " + item.lop + " • Nguồn: " + item.hocKy + " • Gửi lúc: " + item.thoiGian;
 
-      // NẠP ĐÚNG SLIDE FILE THẬT VÀO IFRAME
       const iframe = document.getElementById('gxnPreviewIframe');
       const btnOpen = document.getElementById('btnOpenSlide');
       if (item.slideId) {
@@ -742,7 +753,6 @@
         if (btnOpen) btnOpen.href = "#";
       }
 
-      // Reset con dấu khi chuyển hồ sơ mới
       placedStamps = [];
       selectedStampIndex = null;
       renderStamps();
@@ -774,9 +784,6 @@
       filterAndRenderCurrentTab();
     }
 
-    // ==============================================================
-    // LOGIC CON DẤU & CHỮ KÝ ĐIỆN TỬ KÉO THẢ TRỰC TIẾP
-    // ==============================================================
     function toggleStampDropdown() {
       const menu = document.getElementById('stampDropdownMenu');
       if (menu) menu.classList.toggle('hidden');
@@ -1007,9 +1014,6 @@
       window.addEventListener('mouseup', onMouseUp);
     }
 
-    // ==============================================================
-    // CÁC HÀM XÉT DUYỆT THẬT (GỬI VỀ APPS SCRIPT)
-    // ==============================================================
     function submitCtvReview() {
       if (!selectedRequest) return;
       const toast = document.getElementById('adminActionToast');
@@ -1190,9 +1194,6 @@
       });
     }
 
-    // ==============================================================
-    // CÁC HÀM CỦA SINH VIÊN
-    // ==============================================================
     function showToast(msg, type = "info") {
       const toast = document.getElementById('statusToast');
       if (toast) {
@@ -1344,6 +1345,7 @@
     function goBackToPortal() {
       window.location.href = "/";
     }
+
   </script>
 </body>
 </html>
